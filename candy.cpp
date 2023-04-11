@@ -26,6 +26,9 @@ int candy::getColumn() {
 }
 
 //setters
+void candy::setColor(char new_color) {
+    color = new_color;
+}
 void candy::setRow(int new_row) {
     rowLocation = new_row;
 }
