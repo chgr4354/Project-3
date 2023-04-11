@@ -9,17 +9,21 @@ class candy {
     private:
         char color;
         bool isSpecial;
+        bool isModifiable;
         int rowLocation;
         int columnLocation;
     public:
+        candy(); //not yet implemented in candy.cpp
         candy(char color, int row, int column);
         char getColor();
         int getRow();
         int getColumn();
         void setColor(char color);
         void setRow(int row);
-        void setColumn(int col);
+        void setColumn(int column);
+        void setAll(char color, int row, int column);
         bool isSpecialCandy();
+        bool isModifiableCandy();
 
 };
 #endif
