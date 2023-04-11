@@ -16,6 +16,7 @@ class candy {
         char getColor();
         int getRow();
         int getColumn();
+        void setColor(char color);
         void setRow(int row);
         void setColumn(int col);
         bool isSpecialCandy();
