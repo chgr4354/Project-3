@@ -48,3 +48,8 @@ void candy::setAll(char new_color, int new_row, int new_column) {
     rowLocation = new_row;
     columnLocation = new_column;
 }
+
+
+
+
+
