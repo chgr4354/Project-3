@@ -1,6 +1,6 @@
 # Project-3
 
-ColorCrush2DfreeVersion is a modification of the base dungeon dungeon crawler game for project3.
+ColorCrush2DXtremeFreeVersion is a modification of the base dungeon dungeon crawler game for project3.
 
 - The player will start at a difficulty selection menu with instructions on the game and cool graphics
 - The player will have the option to play a tutorial of the game
