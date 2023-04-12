@@ -11,8 +11,8 @@ using namespace std;
 class candyCrush {
 
     private:
-        static const int rows = 13;      //number of rows in level
-        static const int columns = 13;   //number of columns in level
+        static const int rows = 11;      //number of rows in level
+        static const int columns = 11;   //number of columns in level
         int score;
 
         candy board[rows][columns];
@@ -25,7 +25,7 @@ class candyCrush {
         void displayBoard();      //displays level
         bool swap(int row1, int col1, int row2, int col2); //swaps elements
         void generateCandy(int row, int col);   //inserts new color into position in level
-        void removeMatches();
+        void removeMatches(int row, int col);
 
         int getRows();
         int getColumns();

@@ -2,13 +2,19 @@
 
 using namespace std;
 
-candy::candy(char new_color = '-', int new_row = 0, int new_column = 0) { //initialize a new candy object with default values
+candy::candy() {
+    color = " ";
+    rowLocation = 0;
+    columnLocation = 0;
+}
+
+candy::candy(string new_color = "-", int new_row = 0, int new_column = 0) { //initialize a new candy object with default values
     color = new_color;
-    if(new_color == '⭐' || new_color == '🎁')
+    if(new_color == "⭐" || new_color == "🎁")
         isSpecial = true;
     else
         isSpecial = false;
-    if(new_color == '🟦'|| new_color == '🟩' || new_color == '🟥' || new_color == '⬜' || new_color == '-' || new_color == isSpecial)
+    if(new_color == "🟦"|| new_color == "🟩" || new_color == "🟥" || new_color == "⬜" || new_color == "-" || new_color == "⭐" || new_color == "🎁")
         isModifiable = true;
     else
         isModifiable = false;
@@ -16,8 +22,9 @@ candy::candy(char new_color = '-', int new_row = 0, int new_column = 0) { //init
     columnLocation = new_column;
 }
 
+
 //getters
-char candy::getColor() {
+string candy::getColor() {
     return color;
 }
 int candy::getRow() {
@@ -34,7 +41,7 @@ bool candy::isModifiableCandy() { //check if candy is a "candy" or a coordinate 
 }
 
 //setters
-void candy::setColor(char new_color) {
+void candy::setColor(string new_color) {
     color = new_color;
 }
 void candy::setRow(int new_row) {
@@ -43,7 +50,7 @@ void candy::setRow(int new_row) {
 void candy::setColumn(int new_column) {
     columnLocation = new_column;
 }
-void candy::setAll(char new_color, int new_row, int new_column) {
+void candy::setAll(string new_color, int new_row, int new_column) {
     color = new_color;
     rowLocation = new_row;
     columnLocation = new_column;
