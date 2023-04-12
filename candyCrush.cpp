@@ -15,7 +15,7 @@ void candyCrush::initializeBoard(string level) { //initializes board by reading 
     for(int i = 0; i < rows; i++) {
         for(int k = 0; k < columns; k++) {
             levelDesign >> tempColor;
-            board[i][k].setAll(tempColor, i, k);
+            board[i][k] = candy(tempColor, i, k);
         }
     }
 }
@@ -24,7 +24,7 @@ void candyCrush::resetBoard() { //resets board to the same color (possibly unnec
 
     for(int i = 0; i < rows; i++) {
         for(int k = 0; k < columns; k++) {
-            board[i][k].setAll('🐱‍🚀', i, k);
+            board[i][k] = candy('🐱‍🚀', i, k);
         }
     }
 }
@@ -61,34 +61,34 @@ void candyCrush::generateCandy(int row, int col) {
     int randNum = rand() % 10;
     switch(randNum) {
         case 0:
-            board[row][col].setAll('🟦', row, col);
+            board[row][col] = candy('🟦', row, col);
             break;
         case 1:
-            board[row][col].setAll('🟩', row, col);
+            board[row][col] = candy('🟩', row, col);
             break;
         case 2:
-            board[row][col].setAll('🟥', row, col);
+            board[row][col] = candy('🟥', row, col);
             break;
         case 3:
-            board[row][col].setAll('⬜', row, col);
+            board[row][col] = candy('⬜', row, col);
             break;
         case 4:
-            board[row][col].setAll('🟦', row, col);
+            board[row][col] = candy('🟦', row, col);
             break;
         case 5:
-            board[row][col].setAll('🟩', row, col);
+            board[row][col] = candy('🟩', row, col);
             break;
         case 6:
-            board[row][col].setAll('🟥', row, col);
+            board[row][col] = candy('🟥', row, col);
             break;
         case 7:
-            board[row][col].setAll('⬜', row, col);
+            board[row][col] = candy('⬜', row, col);
             break;
         case 8:
-            board[row][col].setAll('⭐', row, col);
+            board[row][col] = candy('⭐', row, col);
             break;
         case 9:
-            board[row][col].setAll('🎁', row, col);
+            board[row][col] = candy('🎁', row, col);
             break;
         default:
             cout << "generation error" << endl;
@@ -148,5 +148,4 @@ bool candyCrush::isGift(int row, int col) {
         return true;
     else
         return false;
-
 }
