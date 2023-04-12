@@ -22,6 +22,7 @@ class candy {
         void setRow(int row);
         void setColumn(int column);
         void setAll(char color, int row, int column);
+        void move(char direction);
         bool isSpecialCandy();
         bool isModifiableCandy();
 
