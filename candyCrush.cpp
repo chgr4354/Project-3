@@ -10,7 +10,7 @@ candyCrush::candyCrush(string levelName) {
 
 void candyCrush::initializeBoard(string level) { //initializes board by reading from file
     ifstream levelDesign(level);
-    char tempColor;
+    string tempColor;
 
     for(int i = 0; i < rows; i++) {
         for(int k = 0; k < columns; k++) {
@@ -32,11 +32,15 @@ void candyCrush::resetBoard() { //resets board to the same color (possibly unnec
 void candyCrush::displayBoard() { //displays board
 
     for(int i = 0; i < rows; i++) {
-        for(int k = 0; k < columns; k++) {
-            cout << board[i][k].getColor();
+        if(i < 10) {
+            for(int k = 0; k < columns; k++) {
+                cout << board[i][k].getColor();
+            }
+            cout << "\n";
         }
-        cout << "\n";
+        //spacing may be weird for last row **fix**
     }
+    cout <<"  1️⃣ 2️⃣ 3️⃣ 4️⃣ 5️⃣ 6️⃣ 7️⃣ 8️⃣ 9️⃣ 🔟" << endl;
 }  
 
 bool candyCrush::swap(int row1, int col1, int row2, int col2) { //swaps elements
@@ -61,34 +65,34 @@ void candyCrush::generateCandy(int row, int col) {
     int randNum = rand() % 10;
     switch(randNum) {
         case 0:
-            board[row][col] = candy('🟦', row, col);
+            board[row][col] = candy("🟦", row, col);
             break;
         case 1:
-            board[row][col] = candy('🟩', row, col);
+            board[row][col] = candy("🟩", row, col);
             break;
         case 2:
-            board[row][col] = candy('🟥', row, col);
+            board[row][col] = candy("🟥", row, col);
             break;
         case 3:
-            board[row][col] = candy('⬜', row, col);
+            board[row][col] = candy("⬜", row, col);
             break;
         case 4:
-            board[row][col] = candy('🟦', row, col);
+            board[row][col] = candy("🟦", row, col);
             break;
         case 5:
-            board[row][col] = candy('🟩', row, col);
+            board[row][col] = candy("🟩", row, col);
             break;
         case 6:
-            board[row][col] = candy('🟥', row, col);
+            board[row][col] = candy("🟥", row, col);
             break;
         case 7:
-            board[row][col] = candy('⬜', row, col);
+            board[row][col] = candy("⬜", row, col);
             break;
         case 8:
-            board[row][col] = candy('⭐', row, col);
+            board[row][col] = candy("⭐", row, col);
             break;
         case 9:
-            board[row][col] = candy('🎁', row, col);
+            board[row][col] = candy("🎁", row, col);
             break;
         default:
             cout << "generation error" << endl;
@@ -98,12 +102,42 @@ void candyCrush::generateCandy(int row, int col) {
 
 /* removeMatches() will check if candy color matches or it is a special candy using isSameColor()
    removeMatches() will use recursion to check for every instance of matching colors until there are no more matches
-   removeMatches() will assign each matched location to 
 */
-void candyCrush::removeMatches() {
-    
+//***not tested***
+void candyCrush::removeMatches(int row, int col) {
 
+    if(isOnBoard(row, col)) {
+        if (board[row][col].isModifiableCandy() && isSameColor(row, col, row + 1, col)) {
+            // remove the matching candy and add to score
+            board[row][col].setColor(" ");
+            score++;
+            // check for any other matches below the current candy
+            removeMatches(row + 1, col);
+        }
+        if (board[row][col].isModifiableCandy() && isSameColor(row, col, row, col + 1)) {
+            board[row][col].setColor(" ");
+            score++;
+            // check for any other matches to the right of the current candy
+            removeMatches(row, col + 1);
+        }
+        if (board[row][col].isModifiableCandy() && isSameColor(row, col, row - 1, col)) {
+            board[row][col].setColor(" ");
+            score++;
+            // check for any other matches above the current candy
+            removeMatches(row - 1, col);
+        }
+        if (board[row][col].isModifiableCandy() && isSameColor(row, col, row, col - 1)) {
+            board[row][col].setColor(" ");
+            score++;
+            // check for any other matches to the left of the current candy
+            removeMatches(row, col - 1);
+        }
+        if (board[row][col].isSpecialCandy()) {
+            // handle special candies here
+        }
+    }
 }
+
 
 int candyCrush::getRows() {
     return rows;
@@ -135,16 +169,17 @@ bool candyCrush::isSameColor(int row1, int col1, int row2, int col2) {
     else
         return false;
 }
+
 //checks if candy is a star
 bool candyCrush::isStar(int row, int col) {
-    if(board[row][col].getColor() == '⭐')
+    if(board[row][col].getColor() == "⭐")
         return true;
     else
         return false;
 }
 //checks if candy is a gift
 bool candyCrush::isGift(int row, int col) {
-    if(board[row][col].getColor() == '🎁')
+    if(board[row][col].getColor() == "🎁")
         return true;
     else
         return false;
