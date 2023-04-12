@@ -49,7 +49,23 @@ void candy::setAll(char new_color, int new_row, int new_column) {
     columnLocation = new_column;
 }
 
-
-
-
-
+//other
+//***DOES NOT CHECK IF LOCATION isOnBoard()****
+void candy::move(char direction) { //moves candy to new location (w,a,s,d)
+    switch (direction) {
+        case 'w':
+            rowLocation--;
+            break;
+        case 's':
+            rowLocation++;
+            break;
+        case 'a':
+            columnLocation--;
+            break;
+        case 'd':
+            columnLocation++;
+            break;
+        default:
+            break;
+    }
+}
