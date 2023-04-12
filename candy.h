@@ -7,21 +7,21 @@ using namespace std;
 
 class candy {
     private:
-        char color;
+        string color;
         bool isSpecial;
         bool isModifiable;
         int rowLocation;
         int columnLocation;
     public:
         candy(); //not yet implemented in candy.cpp
-        candy(char color, int row, int column);
-        char getColor();
+        candy(string color, int row, int column);
+        string getColor();
         int getRow();
         int getColumn();
-        void setColor(char color);
+        void setColor(string color);
         void setRow(int row);
         void setColumn(int column);
-        void setAll(char color, int row, int column);
+        void setAll(string color, int row, int column);
         void move(char direction);
         bool isSpecialCandy();
         bool isModifiableCandy();
