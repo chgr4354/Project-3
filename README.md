@@ -11,3 +11,5 @@ ColorCrush2DXtremeFreeVersion is a modification of the base dungeon dungeon craw
 - If the player defeats the monster, they will be returned to the main level selector map
 - Upon returning the the main map, they can encounter misfortunes and will have depleted stats that they must recover before entering new level
 - Process continues until third level and monster are defeated, where they must _________________, and then win the game.
+
+- instead of scoring points for each candy matched, we could make the player gain 1 pound of weight per candy matched (weight gain speedrun)
