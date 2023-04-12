@@ -39,17 +39,18 @@ void candyCrush::displayBoard() { //displays board
     }
 }  
 
-void candyCrush::swap(int row1, int col1, int row2, int col2) { //swaps elements
+bool candyCrush::swap(int row1, int col1, int row2, int col2) { //swaps elements
     if((isOnBoard(row1, col1) && isOnBoard(row2, col2)) && 
        (board[row1][col1].isModifiableCandy() && board[row2][col2].isModifiableCandy())) 
        {
         candy temp = board[row1][col1];
         board[row1][col1] = board[row2][col2];
         board[row2][col2] = temp;
+        return true;
         //displayBoard();
     }
     else
-        cout << "You can't do that!" << endl;
+        return false;
 
 }
 
@@ -100,6 +101,7 @@ void candyCrush::generateCandy(int row, int col) {
    removeMatches() will assign each matched location to 
 */
 void candyCrush::removeMatches() {
+    
 
 }
 
@@ -126,16 +128,25 @@ bool candyCrush::isOnBoard(int new_row, int new_col) {
         return false;
 }
 
-//checks if candyt is same color
+//checks if candy is same color
 bool candyCrush::isSameColor(int row1, int col1, int row2, int col2) {
     if(board[row1][col1].getColor() == board[row2][col2].getColor())
         return true;
     else
         return false;
 }
+//checks if candy is a star
 bool candyCrush::isStar(int row, int col) {
-
+    if(board[row][col].getColor() == '⭐')
+        return true;
+    else
+        return false;
 }
+//checks if candy is a gift
 bool candyCrush::isGift(int row, int col) {
+    if(board[row][col].getColor() == '🎁')
+        return true;
+    else
+        return false;
 
 }
