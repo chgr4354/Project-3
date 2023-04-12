@@ -53,9 +53,46 @@ void candyCrush::swap(int row1, int col1, int row2, int col2) { //swaps elements
 
 }
 
-//generateColor() will create a new candy object in place of one that has moved or been deleted
-void candyCrush::generateCandy() {
-
+//generateColor() will create a new candy object in place of one that has moved or been deleted at (row, col)
+//80% chance of regular color, 20% chance of special color
+//***call srand() function in main***
+void candyCrush::generateCandy(int row, int col) {
+    int randNum = rand() % 10;
+    switch(randNum) {
+        case 0:
+            board[row][col].setAll('🟦', row, col);
+            break;
+        case 1:
+            board[row][col].setAll('🟩', row, col);
+            break;
+        case 2:
+            board[row][col].setAll('🟥', row, col);
+            break;
+        case 3:
+            board[row][col].setAll('⬜', row, col);
+            break;
+        case 4:
+            board[row][col].setAll('🟦', row, col);
+            break;
+        case 5:
+            board[row][col].setAll('🟩', row, col);
+            break;
+        case 6:
+            board[row][col].setAll('🟥', row, col);
+            break;
+        case 7:
+            board[row][col].setAll('⬜', row, col);
+            break;
+        case 8:
+            board[row][col].setAll('⭐', row, col);
+            break;
+        case 9:
+            board[row][col].setAll('🎁', row, col);
+            break;
+        default:
+            cout << "generation error" << endl;
+            break;
+    }
 }
 
 /* removeMatches() will check if candy color matches or it is a special candy using isSameColor()
@@ -83,17 +120,18 @@ void candyCrush::setScore(int new_score) {
 }
 
 bool candyCrush::isOnBoard(int new_row, int new_col) {
-    if(new_row > 0 || new_row < rows || new_col > 0 || new_col < columns) {
+    if(new_row > 0 || new_row < rows || new_col > 0 || new_col < columns)
         return true;
-    }
     else
         return false;
-
 }
 
-//checks if candies in any four directions are the same
-vector<bool> candyCrush::isSameColor(int row, int col) {
-
+//checks if candyt is same color
+bool candyCrush::isSameColor(int row1, int col1, int row2, int col2) {
+    if(board[row1][col1].getColor() == board[row2][col2].getColor())
+        return true;
+    else
+        return false;
 }
 bool candyCrush::isStar(int row, int col) {
 
