@@ -10,7 +10,7 @@ ColorCrush2DXtremeFreeVersion is a modification of the base dungeon dungeon craw
 - Upon entering a level, they will need to meet a threshold of points for that level or else they will lose the game
 - Each level will be designed using .txt files, and they will always be able to meet the minimum threshold to pass
 - If the player wishes to gain more points from that level, they must hope that the candies randomly generate in their favor
-- What a level may look like: [testLevel.txt](https://github.com/chgr4354/Project-3/files/11216922/testLevel.txt)
+- What a level may look like: [testLevel.txt](https://github.com/chgr4354/Project-3/files/11216922/testLevel.txt) (formatted correctly in console)
 - CandyCrush mechanics:
   - The player can choose to swap candies in any four directions
   - If the candy moves to a location where it matches with at least ____ other candies of the same color around it, the game will remove the matched candies and randomly generate new candies in their place (80% chance normal, 20% chance special)
@@ -23,4 +23,4 @@ ColorCrush2DXtremeFreeVersion is a modification of the base dungeon dungeon craw
 - If the player defeats the monster, they will be returned to the main level selector map (lose game if defeated by monster)
 - Upon returning to the main map, they can encounter misfortunes and will have depleted stats that they must recover before entering new level
 - Process continues until third level and monster are defeated, where they must _________________, and then win the game.
-*stats will be constantly displayed throughout game
+*stats will be constantly displayed throughout game*
