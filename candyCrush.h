@@ -41,7 +41,6 @@ class candyCrush {
         bool isGift(int row, int col);
 
         //for future, may want isColor() function for easier testing
-
-
+    
 };
 #endif
