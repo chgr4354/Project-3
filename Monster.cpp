@@ -5,8 +5,8 @@ using namespace std;
 
 Monster::Monster() {
     name = "Lv. 1 Mafia Boss";
-    damage = 1;
-    health = 5;
+    damage = 0;
+    health = 0;
 }
 
 Monster::Monster(string new_name, int new_health, int new_damage) {
