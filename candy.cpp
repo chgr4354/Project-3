@@ -3,7 +3,7 @@
 using namespace std;
 
 candy::candy() {
-    color = " ";
+    color = "-";
     rowLocation = 0;
     columnLocation = 0;
 }
@@ -42,7 +42,10 @@ bool candy::isModifiableCandy() { //check if candy is a "candy" or a coordinate 
 
 //setters
 void candy::setColor(string new_color) {
+    if(new_color == "⭐" || new_color == "🎁")
+        isSpecial = true;
     color = new_color;
+    
 }
 void candy::setRow(int new_row) {
     rowLocation = new_row;
@@ -56,7 +59,7 @@ void candy::setAll(string new_color, int new_row, int new_column) {
     columnLocation = new_column;
 }
 
-//other
+/* other, may not be necessary
 //***DOES NOT CHECK IF LOCATION isOnBoard()****
 void candy::move(char direction) { //moves candy to new location (w,a,s,d)
     switch (direction) {
@@ -76,3 +79,4 @@ void candy::move(char direction) { //moves candy to new location (w,a,s,d)
             break;
     }
 }
+*/

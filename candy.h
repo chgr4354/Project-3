@@ -12,8 +12,9 @@ class candy {
         bool isModifiable;
         int rowLocation;
         int columnLocation;
+
     public:
-        candy(); //not yet implemented in candy.cpp
+        candy();
         candy(string color, int row, int column);
         string getColor();
         int getRow();
@@ -22,7 +23,7 @@ class candy {
         void setRow(int row);
         void setColumn(int column);
         void setAll(string color, int row, int column);
-        void move(char direction);
+        void move(char direction); //may not be necessary
         bool isSpecialCandy();
         bool isModifiableCandy();
 
