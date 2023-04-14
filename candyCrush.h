@@ -13,7 +13,7 @@ class candyCrush {
     private:
         static const int rows = 11;      //number of rows in level
         static const int columns = 11;   //number of columns in level
-        int score;
+        int score = 0;
 
         candy board[rows][columns];
 
@@ -39,6 +39,8 @@ class candyCrush {
         bool isSameColor(int row, int col, int row2, int col2);
         bool isStar(int row, int col);
         bool isGift(int row, int col);
+
+        //for future, may want isColor() function for easier testing
 
 
 };
