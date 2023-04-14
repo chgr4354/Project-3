@@ -24,3 +24,5 @@ ColorCrush2DXtremeFreeVersion is a modification of the base dungeon dungeon craw
 - Upon returning to the main map, they can encounter misfortunes and will have depleted stats that they must recover before entering new level
 - Process continues until third level and monster are defeated, where they must _________________, and then win the game.
 *stats will be constantly displayed throughout game*
+
+-Christian Green
