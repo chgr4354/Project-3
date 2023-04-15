@@ -25,7 +25,7 @@ class candyCrush {
         void displayBoard();      //displays level
         bool swap(int row1, int col1, int row2, int col2); //swaps elements
         void generateCandy(int row, int col);   //inserts new color into position in level
-        void removeMatches(int row, int col);
+        void removeMatches(string color, int row, int col);
 
         int getRows();
         int getColumns();
@@ -41,6 +41,6 @@ class candyCrush {
         bool isGift(int row, int col);
 
         //for future, may want isColor() function for easier testing
-    
+
 };
 #endif
