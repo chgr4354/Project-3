@@ -106,45 +106,21 @@ void candyCrush::generateCandy(int row, int col) {
 /* removeMatches() will check if candy color matches or it is a special candy using isSameColor()
    removeMatches() will use recursion to check for every instance of matching colors until there are no more matches
 */
-//***tested, not working (bad memory allocation)***
-void candyCrush::removeMatches(int row, int col) {
-
-    if(isOnBoard(row, col)) {
-        if (board[row][col].isModifiableCandy() && isSameColor(row, col, row + 1, col)) {
-            // remove the matching candy and add to score
-            board[row][col].setColor(" ");
-            score++;
-            // check for any other matches below the current candy
-            removeMatches(row + 1, col);
-        }
-        if (board[row][col].isModifiableCandy() && isSameColor(row, col, row, col + 1)) {
-            board[row][col].setColor(" ");
-            score++;
-            // check for any other matches to the right of the current candy
-            removeMatches(row, col + 1);
-        }
-        if (board[row][col].isModifiableCandy() && isSameColor(row, col, row - 1, col)) {
-            board[row][col].setColor(" ");
-            score++;
-            // check for any other matches above the current candy
-            removeMatches(row - 1, col);
-        }
-        if (board[row][col].isModifiableCandy() && isSameColor(row, col, row, col - 1)) {
-            board[row][col].setColor(" ");
-            score++;
-            // check for any other matches to the left of the current candy
-            removeMatches(row, col - 1);
-        }
-        if (board[row][col].isSpecialCandy()) {
-            // handle special candies here
-        }
-        else
-            return;
-    }
-    else {
+void candyCrush::removeMatches(string color, int row, int col) {
+    if (!isOnBoard(row, col))
         return;
+    else if(board[row][col].isModifiableCandy() == false)
+        return;
+    if (board[row][col].getColor() == color) {
+        board[row][col].setColor("⬛");
+        score++;
+        removeMatches(color, row + 1, col); // check for any other matches below the current candy
+        removeMatches(color, row - 1, col); // check for any other matches above the current candy
+        removeMatches(color, row, col + 1); // check for any other matches to the right of the current candy
+        removeMatches(color, row, col - 1); // check for any other matches to the left of the current candy
     }
 }
+
 
 
 int candyCrush::getRows() {

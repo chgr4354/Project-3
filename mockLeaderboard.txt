@@ -1,0 +1,3 @@
+Christian|80
+Ivan|80
+Bob|50
