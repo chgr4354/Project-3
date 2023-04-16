@@ -7,6 +7,29 @@
 #include "vectorSplit.h"
 using namespace std;
 
+void printStats(Player player) {
+
+    cout << "\033[1;33m"
+            "+-------------+\n"
+            "|    STATS    |\n"
+            "+-------------+\n"
+            "| Levels Cleared: 1 | Keys: 0 | Anger Level: 12\n"
+            "+-------------+\n"
+            "|  INVENTORY  |\n"
+            "+-------------+\n"
+            "|        Gold | 32\n"
+            "|        Food | 15 kg\n"
+            "|     Weapons | C: 1 | S: 2 | R: 1 | B: 0 | L: 1\n"
+            "|       Armor | 4"
+            "|   Treasures | R: 1 | N: 0 | B: 0 | C: 0 | G: 0\n"
+            "+-------------+\n"
+            "|    SCORE    |\n"
+            "+-------------+" << "\033[0m\n";
+
+            //ITEMS: have a file with cool items that can affect the players stats - beneficial or misfortune
+
+}
+
 /*
     This function prints out every past score of the user and uses a sorting algorithim to
     determine which order to print them
