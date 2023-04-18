@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include "Player.h"
+#include "Monster.h"
 #include "vectorSplit.h"
 using namespace std;
 
@@ -21,7 +22,6 @@ void printStats(Player player) {
             "|        Food | 15 kg\n"
             "|     Weapons | C: 1 | S: 2 | R: 1 | B: 0 | L: 1\n"
             "|       Armor | 4"
-            "|   Treasures | R: 1 | N: 0 | B: 0 | C: 0 | G: 0\n"
             "+-------------+\n"
             "|    SCORE    |\n"
             "+-------------+" << "\033[0m\n";
@@ -82,6 +82,15 @@ void printStory(string filename) { //**redundant?**
     }
     else
         cout << "story could not be opened\n";    
+
+}
+
+void fight(Player player, Monster monster) {
+
+
+
+}
+void printBattleOptions(Player player, Monster monster) {
 
 }
 
