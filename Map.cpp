@@ -1,4 +1,5 @@
 #include "Map.h"
+#include "Room.h"
 
 using namespace std;
 
@@ -336,9 +337,8 @@ bool Map::addNPC(int row, int col)
  * Parameters: row (int), col (int)
  * Return: boolean (bool)
  */
-bool Map::addRoom(int row, int col)
+bool Map::addRoom(int levelNum, int row, int col)
 {
-
     if (room_count_ >= max_rooms_)
     {
         return false;
@@ -350,11 +350,18 @@ bool Map::addRoom(int row, int col)
         return false;
     }
 
+    rooms.push_back(Room(levelNum, row, col)); //creates room object that exists at the same spot, so level_number of room can be checked
+
     room_positions_[room_count_][0] = row;
     room_positions_[room_count_][1] = col;
     room_count_++;
     map_data_[row][col] = ROOM;
     return true;
+}
+Room Map::getRoom(int index) {
+
+    return rooms.at(index);
+    
 }
 
 /*
@@ -527,6 +534,7 @@ bool Map::move(char direction)
     default:
         return false;
     }
+
     // if new location is an NPC location, mark as explored
     if (isNPCLocation(player_position_[0], player_position_[1]))
     {
