@@ -13,14 +13,14 @@ int main()
     cout << "Default constructor: " << endl;
     cout << "Room #: " << map.getRoomCount() << endl;
     cout << "Let's add some rooms: " << endl;
-    assert(map.addRoom(2, 3));
-    assert(map.addRoom(8, 5));
-    assert(map.addRoom(2, 7));
+    assert(map.addRoom(1, 2, 3));
+    assert(map.addRoom(2, 8, 5));
+    assert(map.addRoom(3, 2, 7));
     //assert(map.addRoom(8, 2));
-    assert(!map.addRoom(15, 15)); // should not show on map nor error out, out of bounds
-    assert(!map.addRoom(2, 3));   // will not do anything since space is occupied
+    assert(!map.addRoom(4, 15, 15)); // should not show on map nor error out, out of bounds
+    assert(!map.addRoom(5, 2, 3));   // will not do anything since space is occupied
     //assert(map.addRoom(5, 7));
-    assert(!map.addRoom(3, 7)); // will fail due to exceeding max_rooms_
+    assert(!map.addRoom(6, 3, 7)); // will fail due to exceeding max_rooms_
     map.displayMap();
     cout << "Spawning some NPCs: " << endl;
     assert(map.addNPC(4, 4));
