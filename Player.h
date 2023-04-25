@@ -1,8 +1,12 @@
+#ifndef PLAYER_H
+#define PLAYER_H
+
 #include <iostream>
-#include <fstream>
-#include <string>
-#include <cmath>
-#include <cassert>
+#include <vector>
+#include "Food.h"
+#include "Weapon.h"
+#include "Armor.h"
+
 using namespace std;
 
 //How a Player May Look
@@ -11,13 +15,18 @@ using namespace std;
 //Score
 //Money
 //Level
-
+//Hunger
 
 class Player
 {
     private:
 
-        string username; //The name of the user
+        int levels_cleared;
+
+        Weapon curr_weapon;
+        Armor curr_armor;
+        vector<Food> food_inv;
+        string username; //The name of the player
         
         //Score Counters
         int level_score; //The score that the user has at a specific level
@@ -28,8 +37,9 @@ class Player
         int total_money; //Amount of user money
 
         //Level Counters
-        int levels_done; //How many levels have been completed by user
         int total_level; //The level of the user as decided by algorithim
+
+        int health;
 
     public:
 
@@ -43,6 +53,7 @@ class Player
         //Setters and Getters for Level Score
         void setLevelScore(int level_score);
         int getLevelScore();
+        void restLevelScore(); 
 
         //Setters and Getters for Total Score
         void setTotalScore(int score);
@@ -51,6 +62,7 @@ class Player
         //Setters and Getters for Level Money
         void setLevelMoney(int money);
         int getLevelMoney();
+        void resetLevelMoney();
 
         //Setters and Getters for Total Money
         void setTotalMoney(int money);
@@ -59,4 +71,28 @@ class Player
         //Setters and Getters for Level
         void setLevel(int level);
         int getLevel();
+
+        int getLevelsCleared();
+        void increaseLevelsCleared();
+
+        //getters for weapons and armor
+        Weapon getCurrWeapon();
+        //inspect weapon option in main()
+        Armor getCurrArmor();
+        void setCurrWeapon(Weapon weapon);
+        void setCurrArmor(Armor armor);
+
+        Food getFood(int index);
+        void addFood(Food food);
+        void printFoodInv(vector<Food> vect);
+        vector<Food> getFoodInv();
+
+        int getHealth();
+        void setHealth(int health);
+
+        
+
+
+
 };
+#endif
