@@ -1,0 +1,20 @@
+Plate Mail of the Chosen One|50|175|N/A
+Chain Mail of the Griffin Rider|40|150|N/A
+Scale Mail of the Serpent Sorcerer|35|125|N/A
+Cloak of the Shadow Assassin|25|110|N/A
+Studded Leather of the Rogue One|20|105|N/A
+Brigandine of the Bandit King|30|130|N/A
+Splint Mail of the Glass Crusader|45|190|N/A
+Ring Mail of the Iron Warlord|35|135|N/A
+Hide of the Bear Shaman|15|105|N/A
+Silk Robe of the Mystic Sage|10|100|N/A
+Chain Armor of the Falcon Guards|30|170|N/A
+Plate Armor of the King's Guard|55|200|N/A
+Dragon Scale of the Fire Breather|60|200|N/A
+Leather Jackets of the Highwayman|20|115|N/A
+Robe of the Illusionist|15|120|N/A
+Elven Chain of the Forest Clan|45|180|N/A
+Golden Armor of the Sun God|50|195|N/A
+Bulletproof suit of John Wick|30|155|N/A
+Breastplate of the Stormbringer|40|160|N/A
+Scals of the Lizardfolk Hunter|25|125|N/A

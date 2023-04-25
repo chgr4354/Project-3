@@ -1,0 +1,18 @@
+Flamingo Steak|35|35
+Dragonfruit Salad|25|15
+Galactic Gumbo|20|20
+Neon Noodles|30|25
+Cosmic Cake|15|10
+Moon Rock Candy|25|20
+Starburst Smoothie|10|8
+Oceanic Oysters|20|12
+Wildfire Wings|30|25
+Jungle Juice|35|30
+Solar Sausage|30|22
+Thunder Thyme Soup|25|18
+Lunar Lemonade|20|15
+Stellar Steak Tartare|22|17
+Electric Eel Sushi|18|12
+Honeycomb Hummus|10|8
+Meteorite Muffin|20|15
+Firefly Fajitas|40|35
