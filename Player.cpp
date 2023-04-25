@@ -1,0 +1,144 @@
+#include "Player.h"
+
+using namespace std;
+
+//Sets Default Values for Player Object
+Player::Player() {
+
+    Weapon default_weapon;
+    Armor default_armor;
+    curr_weapon = default_weapon;
+    curr_armor = default_armor;
+
+    username = "";
+
+    level_score = 0;
+    total_score = 0;
+
+    level_money = 0;
+    total_money = 200;
+    
+    total_level = 0; //Player Level
+
+    levels_cleared = 0;
+}
+//This Sets users name
+void Player::setUsername(string set_username)
+{
+    username = set_username;
+}
+//This gets the name
+string Player::getUsername()
+{
+    return username;
+}
+//Sets the total player score
+void Player::setTotalScore(int score)
+{
+    total_score = total_score + score;
+}
+//Sets the specific level score
+void Player::setLevelScore(int set_level)
+{
+    level_score = set_level;
+}
+//Resets level_score
+void Player::restLevelScore()
+{
+    level_score = 0;
+} 
+//Obtains Level Score
+int Player::getLevelScore()
+{
+    return level_score;
+}
+//Gets the players total Score
+int Player::getTotalScore()
+{
+    return total_score;
+}
+//Sets amount of money gained from a specific level
+void Player::setLevelMoney(int new_level_money)
+{
+    level_money = new_level_money;
+}
+//Gets specific money from level
+int Player::getLevelMoney()
+{
+    return level_money;
+}
+//Resets Money Gained from level
+void Player::resetLevelMoney()
+{
+    level_money = 0;
+} 
+//Sets the total amount of money a player has
+void Player::setTotalMoney(int money)
+{
+    total_money = money;
+}
+//Gets how much money a player has at that moment
+int Player::getTotalMoney()
+{
+    return total_money;
+}
+//Sets a players level based on how many levels a player has completed total
+void Player::setLevel(int level_complete)
+{
+    total_level = total_level + level_complete;
+}
+//Gets player level at a given point
+int Player::getLevel()
+{
+    return total_level;
+}
+
+int Player::getLevelsCleared() {
+    return levels_cleared;
+}
+void Player::increaseLevelsCleared() {
+    levels_cleared++;
+}
+
+//getters
+Weapon Player::getCurrWeapon() {
+    return curr_weapon;
+}
+Armor Player::getCurrArmor() {
+    return curr_armor;
+}
+vector<Food> Player::getFoodInv() {
+    return food_inv;
+}
+Food Player::getFood(int index) {
+    return food_inv.at(index);
+}
+void Player::addFood(Food food) {
+    food_inv.push_back(food);
+}
+void Player::printFoodInv(vector<Food> vect) {
+    if(!vect.empty()) {
+        for(int i = 0; i < vect.size(); i++) {
+            cout << vect.at(i).getName() << ": " << vect.at(i).getRecover() << "HP | ";
+        }
+    }
+    else
+        cout << "You have no food";
+}
+
+//setters
+void Player::setCurrWeapon(Weapon weapon) {
+    curr_weapon = weapon;
+}
+void Player::setCurrArmor(Armor armor) {
+    curr_armor = armor;
+}
+
+
+
+int Player::getHealth() {
+    return health;
+}
+void Player::setHealth(int new_health) {
+    health = new_health;
+}

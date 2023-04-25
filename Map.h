@@ -2,6 +2,8 @@
 #define MAP_H
 
 #include <iostream>
+#include <vector>
+#include "Room.h"
 
 using namespace std;
 
@@ -28,6 +30,10 @@ private:
 
     int npc_count_;  // stores number of misfortunes currently on map
     int room_count_; // stores number of sites currently on map
+
+    vector<Room> rooms;
+
+
 public:
     Map();
 
@@ -39,6 +45,10 @@ public:
     //int getDungeonExitRow();
     //int getDungeonExitCol();
     int getRoomCount();
+
+    Room getRoom(int index); //return room from rooms array
+    //Room getRoomAtLocation(int row, int col);
+
     int getNPCCount();
     int getNumRows();
     int getNumCols();
@@ -57,7 +67,7 @@ public:
     void displayMap();
     bool move(char);
     bool addNPC(int row, int col);
-    bool addRoom(int row, int col);
+    bool addRoom(int level, int row, int col);
     bool removeNPC(int row, int col);
     bool removeRoom(int row, int col);
     void exploreSpace(int row, int col);

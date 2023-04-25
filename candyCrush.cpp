@@ -1,6 +1,9 @@
 #include "candyCrush.h"
 
 using namespace std;
+candyCrush::candyCrush() {
+    //N/A
+}
 
 candyCrush::candyCrush(string levelName) {
     //resetBoard();
@@ -38,7 +41,6 @@ void candyCrush::displayBoard() { //displays board
             }
             cout << "\n";
         }
-        //spacing may be weird for last row **fix**
     }
     cout <<"  1️⃣ 2️⃣ 3️⃣ 4️⃣ 5️⃣ 6️⃣ 7️⃣ 8️⃣ 9️⃣ 🔟" << endl;
 }  
@@ -46,7 +48,7 @@ void candyCrush::displayBoard() { //displays board
 bool candyCrush::swap(int row1, int col1, int row2, int col2) { //swaps elements
     if((isOnBoard(row1, col1) && isOnBoard(row2, col2)) && 
        (board[row1][col1].isModifiableCandy() && board[row2][col2].isModifiableCandy())) 
-       {
+    {
         candy temp = board[row1][col1];
         board[row1][col1] = board[row2][col2];
         board[row2][col2] = temp;
@@ -60,57 +62,78 @@ bool candyCrush::swap(int row1, int col1, int row2, int col2) { //swaps elements
 //generateColor() will create a new candy object in place of one that has moved or been deleted at (row, col)
 //80% chance of regular color, 20% chance of special color
 //***call srand() function in main***
-void candyCrush::generateCandy(int row, int col) {
-    int randNum = rand() % 10;
-    if(isOnBoard(row, col)) {
-        switch(randNum) {
-            case 0:
-                board[row][col] = candy("🟦", row, col);
-                break;
-            case 1:
-                board[row][col] = candy("🟩", row, col);
-                break;
-            case 2:
-                board[row][col] = candy("🟥", row, col);
-                break;
-            case 3:
-                board[row][col] = candy("⬜", row, col);
-                break;
-            case 4:
-                board[row][col] = candy("🟦", row, col);
-                break;
-            case 5:
-                board[row][col] = candy("🟩", row, col);
-                break;
-            case 6:
-                board[row][col] = candy("🟥", row, col);
-                break;
-            case 7:
-                board[row][col] = candy("⬜", row, col);
-                break;
-            case 8:
-                board[row][col] = candy("⭐", row, col);
-                break;
-            case 9:
-                board[row][col] = candy("🎁", row, col);
-                break;
-            default:
-                cout << "generation error" << endl;
-                break;
+void candyCrush::generateCandy() {
+
+    for(int i = 0; i < rows; i++) {
+        if(i < 10) {
+            for(int k = 0; k < columns; k++) {
+                if(board[i][k].getColor() == "⬛") {
+                    if(isOnBoard(i, k)) {
+                        int randNum = rand() % 10;
+                        switch(randNum) {
+                            case 0:
+                                board[i][k] = candy("🟦", i, k);
+                                score++;
+                                break;
+                            case 1:
+                                board[i][k] = candy("🟨", i, k);
+                                score++;
+                                break;
+                            case 2:
+                                board[i][k] = candy("🟥", i, k);
+                                score++;
+                                break;
+                            case 3:
+                                board[i][k] = candy("⬜", i, k);
+                                score++;
+                                break;
+                            case 4:
+                                board[i][k] = candy("🟦", i, k);
+                                score++;
+                                break;
+                            case 5:
+                                board[i][k] = candy("🟨", i, k);
+                                score++;
+                                break;
+                            case 6:
+                                board[i][k] = candy("🟥", i, k);
+                                score++;
+                                break;
+                            case 7:
+                                board[i][k] = candy("⬜", i, k);
+                                score++;
+                                break;
+                            case 8:
+                                board[i][k] = candy("⭐", i, k);
+                                score++;
+                                break;
+                            case 9:
+                                board[i][k] = candy("🎁", i, k);
+                                score++;
+                                break;
+                            default:
+                                cout << "generation error" << endl;
+                                break;
+                        }
+                    }
+                    else
+                        return; //***change return value for debugging in future
+                }
+            }
         }
     }
-    else
-        return; //***change return value for debugging in future
 }
 
 /* removeMatches() will check if candy color matches or it is a special candy using isSameColor()
    removeMatches() will use recursion to check for every instance of matching colors until there are no more matches
 */
 void candyCrush::removeMatches(string color, int row, int col) {
-    if (!isOnBoard(row, col))
+    if (!isOnBoard(row, col)) {
         return;
-    else if(board[row][col].isModifiableCandy() == false)
+    }
+    else if(board[row][col].isModifiableCandy() == false) {
         return;
+    }
     if (board[row][col].getColor() == color) {
         board[row][col].setColor("⬛");
         score++;
@@ -119,6 +142,7 @@ void candyCrush::removeMatches(string color, int row, int col) {
         removeMatches(color, row, col + 1); // check for any other matches to the right of the current candy
         removeMatches(color, row, col - 1); // check for any other matches to the left of the current candy
     }
+    return;
 }
 
 
@@ -167,4 +191,9 @@ bool candyCrush::isGift(int row, int col) {
         return true;
     else
         return false;
+}
+
+
+candy candyCrush::getCandy(int row, int col) {
+    return board[row][col];
 }
