@@ -14,7 +14,7 @@ candy::candy(string new_color = "-", int new_row = 0, int new_column = 0) { //in
         isSpecial = true;
     else
         isSpecial = false;
-    if(new_color == "🟦"|| new_color == "🟩" || new_color == "🟥" || new_color == "⬜" || new_color == "-" || new_color == "⭐" || new_color == "🎁")
+    if(new_color == "🟦"|| new_color == "🟨" || new_color == "🟥" || new_color == "⬜" || new_color == "-" || new_color == "⭐" || new_color == "🎁")
         isModifiable = true;
     else
         isModifiable = false;
