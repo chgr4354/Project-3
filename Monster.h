@@ -1,10 +1,9 @@
 #include <iostream>
 #include <fstream>
 #include <cmath>
+#include <vector>
 
 using namespace std;
-
-
 
 class Monster
 {
@@ -16,7 +15,7 @@ class Monster
     public:
 
         Monster(); //Default Constructor
-        Monster(string name, int health, int damage);
+        Monster(string filename);
 
         void setName(string set_name);
         void setHealth(int health); //Sets The Health of the Monster
