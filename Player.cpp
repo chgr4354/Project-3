@@ -35,7 +35,12 @@ string Player::getUsername()
 //Sets the total player score
 void Player::setTotalScore(int score)
 {
-    total_score = total_score + score;
+    total_score = score;
+}
+//Adds to total player score
+void Player::addTotalScore(int score)
+{
+    total_score += score;
 }
 //Sets the specific level score
 void Player::setLevelScore(int set_level)
@@ -76,6 +81,11 @@ void Player::resetLevelMoney()
 void Player::setTotalMoney(int money)
 {
     total_money = money;
+}
+//Adds money to total money a player has
+void Player::addTotalMoney(int money)
+{
+    total_money += money;
 }
 //Gets how much money a player has at that moment
 int Player::getTotalMoney()
@@ -141,4 +151,12 @@ int Player::getHealth() {
 }
 void Player::setHealth(int new_health) {
     health = new_health;
+}
+
+void Player::removeAllFood(Player &player) {
+    player.getFoodInv().clear();
+}
+
+void Player::removeFood(int index) {
+    getFoodInv().erase(getFoodInv().begin() + index);
 }
