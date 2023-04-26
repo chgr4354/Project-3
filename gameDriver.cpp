@@ -486,14 +486,50 @@ void fight(Player &player, Monster &monster) {
                 sleep(0.5);
             }
         }
-        else if(choice == 3) {
+        else if(choice == 3) //Consume food
+        {
+            int food_choice = 0; 
+
+            cout << "You chose to eat! " << endl;
+            sleep(0.5);
+            player.printFoodInv();
+
+            cout << "What would you like to consume? " << endl;
+            cin >> food_choice;
+
+            cout << "You chose " << player.getFood(food_choice) << endl;
+            sleep(0.5);
+
+            cout << "You have gained " << player.getFood(food_choice).getRecover() << " health!" << endl;
+
+            player.setHealth( player.getHealth() + player.getFood(food_choice).getRecover() );
 
         }
-        else if(choice == 4) {
+        else if(choice == 4) //Special Attack
+        {
+            cout << "You chose your Special Attack on " << monster.getName() << "!" << endl;
+            monster.setHealth( monster_health - (player_damage * 2) );
+            sleep(0.5);
+            cout << "You did " << (player_damage * 2) << " against the Monster! " << endl;
+            sleep(0.5);
+            cout << "Sadly, you also did " << (player_damage / 2) << " against yourself!" << endl;
+            player.setHealth( player.getHealth() - (player_damage * 2));
 
+            if(monster_health <= 0) {
+                cout << "Your attack was fatal! " << monster.getName() << " was defeated in " << num_turns << " turns\n";
+                sleep(1);
+                endBattle = true;
+                break;
+            }
         }
-        else if(choice == 5) { //if you run away the monster steals all your food
+        else if(choice == 5) //if you run away the monster steals all your food
+        { 
+            cout << "You decided to run away!" << endl;
+            sleep(0.5);
+            player.removeAllFood();
 
+            cout << "Your food has been stolen!" << endl;
+            endBattle = true;
         }
         
     }
