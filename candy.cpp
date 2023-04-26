@@ -8,7 +8,7 @@ candy::candy() {
     columnLocation = 0;
 }
 
-candy::candy(string new_color = "-", int new_row = 0, int new_column = 0) { //initialize a new candy object with default values
+candy::candy(string new_color = "-", int new_row = 0, int new_column = 0) { //initialize a new candy object
     color = new_color;
     if(new_color == "⭐" || new_color == "🎁")
         isSpecial = true;
@@ -45,7 +45,10 @@ void candy::setColor(string new_color) {
     if(new_color == "⭐" || new_color == "🎁")
         isSpecial = true;
     color = new_color;
-    
+    if(new_color == "🟦"|| new_color == "🟨" || new_color == "🟥" || new_color == "⬜" || new_color == "-" || new_color == "⭐" || new_color == "🎁")
+        isModifiable = true;
+    else
+        isModifiable = false;
 }
 void candy::setRow(int new_row) {
     rowLocation = new_row;
