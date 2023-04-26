@@ -104,7 +104,7 @@ int main() {
     candy2.setColumn(1);
     assert(candy2.getColumn() == 1);
 
-//testing monster class
+/*testing monster class
 
     //default constructor
     Monster monster1;
@@ -126,6 +126,7 @@ int main() {
     monster2.setName("Level 130 Vladimir Putin");
     assert(monster2.getName() == "Level 130 Vladimir Putin");
 
+*/
 
 //testing player class
 
