@@ -1,0 +1,20 @@
+Nightmare|200|25
+Plaguebringer|175|20
+Eternal Tormentor|180|30
+The Devourer|150|18
+Toxic Abomination|120|12
+Deathcaller|200|35
+Harbinger of Doom|160|22
+Lycanfiend|175|28
+Wyrm|190|40
+Basilisk Sovereign|175|30
+Lord of the Undead|160|32
+Colossus of Ashes|200|45
+The Unliving Pharaoh|160|28
+Demonspawn|185|50
+Spectral Terror|140|20
+Sorceress of the Damned|165|26
+The Behemoth|200|55
+King of the Labyrinth|190|42
+Blaze Phoenix|200|60
+Hydra Goddess|200|70
