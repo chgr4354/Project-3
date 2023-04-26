@@ -58,6 +58,7 @@ class Player
         //Setters and Getters for Total Score
         void setTotalScore(int score);
         int getTotalScore();
+        void addTotalScore(int score);
 
         //Setters and Getters for Level Money
         void setLevelMoney(int money);
@@ -67,6 +68,7 @@ class Player
         //Setters and Getters for Total Money
         void setTotalMoney(int money);
         int getTotalMoney();
+        void addTotalMoney(int money);
 
         //Setters and Getters for Level
         void setLevel(int level);
@@ -90,9 +92,8 @@ class Player
         int getHealth();
         void setHealth(int health);
 
-        
-
-
+        void removeFood(int index);
+        void removeAllFood(Player &player);
 
 };
 #endif
