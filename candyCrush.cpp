@@ -47,7 +47,7 @@ void candyCrush::displayBoard() { //displays board
 
 bool candyCrush::swap(int row1, int col1, int row2, int col2) { //swaps elements
     if((isOnBoard(row1, col1) && isOnBoard(row2, col2)) && 
-       (board[row1][col1].isModifiableCandy() && board[row2][col2].isModifiableCandy())) 
+       (board[row1][col1].isModifiableCandy() && board[row2][col2].isModifiableCandy()))
     {
         candy temp = board[row1][col1];
         board[row1][col1] = board[row2][col2];
@@ -60,7 +60,7 @@ bool candyCrush::swap(int row1, int col1, int row2, int col2) { //swaps elements
 }
 
 //generateColor() will create a new candy object in place of one that has moved or been deleted at (row, col)
-//80% chance of regular color, 20% chance of special color
+//95% chance of regular color, 5% chance of special color
 //***call srand() function in main***
 void candyCrush::generateCandy() {
 
@@ -69,55 +69,66 @@ void candyCrush::generateCandy() {
             for(int k = 0; k < columns; k++) {
                 if(board[i][k].getColor() == "⬛") {
                     if(isOnBoard(i, k)) {
-                        int randNum = rand() % 10;
-                        switch(randNum) {
-                            case 0:
-                                board[i][k] = candy("🟦", i, k);
-                                score++;
-                                break;
-                            case 1:
-                                board[i][k] = candy("🟨", i, k);
-                                score++;
-                                break;
-                            case 2:
-                                board[i][k] = candy("🟥", i, k);
-                                score++;
-                                break;
-                            case 3:
-                                board[i][k] = candy("⬜", i, k);
-                                score++;
-                                break;
-                            case 4:
-                                board[i][k] = candy("🟦", i, k);
-                                score++;
-                                break;
-                            case 5:
-                                board[i][k] = candy("🟨", i, k);
-                                score++;
-                                break;
-                            case 6:
-                                board[i][k] = candy("🟥", i, k);
-                                score++;
-                                break;
-                            case 7:
-                                board[i][k] = candy("⬜", i, k);
-                                score++;
-                                break;
-                            case 8:
-                                board[i][k] = candy("⭐", i, k);
-                                score++;
-                                break;
-                            case 9:
-                                board[i][k] = candy("🎁", i, k);
-                                score++;
-                                break;
-                            default:
-                                cout << "generation error" << endl;
-                                break;
+                        int randNum = rand() % 100; //random number between 0-99
+                        if (randNum < 95) {
+                            randNum %= 4; //random number between 0-3
+                            switch(randNum) {
+                                case 0:
+                                    board[i][k] = candy("🟦", i, k);
+                                    score++;
+                                    break;
+                                case 1:
+                                    board[i][k] = candy("🟨", i, k);
+                                    score++;
+                                    break;
+                                case 2:
+                                    board[i][k] = candy("🟥", i, k);
+                                    score++;
+                                    break;
+                                case 3:
+                                    board[i][k] = candy("⬜", i, k);
+                                    score++;
+                                    break;
+                                case 4:
+                                    board[i][k] = candy("🟦", i, k);
+                                    score++;
+                                    break;
+                                case 5:
+                                    board[i][k] = candy("🟨", i, k);
+                                    score++;
+                                    break;
+                                case 6:
+                                    board[i][k] = candy("🟥", i, k);
+                                    score++;
+                                    break;
+                                case 7:
+                                    board[i][k] = candy("⬜", i, k);
+                                    score++;
+                                    break;
+                                default:
+                                    cout << "generation error" << endl;
+                                    break;
+                            }
+                        }
+                        else {
+                            randNum %= 2; //random number between 0-1
+                            switch(randNum) {
+                                case 0:
+                                    board[i][k] = candy("⭐", i, k);
+                                    score++;
+                                    break;
+                                case 1:
+                                    board[i][k] = candy("🎁", i, k);
+                                    score++;
+                                    break;
+                                default:
+                                    cout << "generation error" << endl;
+                                    break;
+                            }
                         }
                     }
                     else
-                        return; //***change return value for debugging in future
+                        return;
                 }
             }
         }
@@ -135,8 +146,8 @@ void candyCrush::removeMatches(string color, int row, int col) {
         return;
     }
     if (board[row][col].getColor() == color) {
+
         board[row][col].setColor("⬛");
-        score++;
         removeMatches(color, row + 1, col); // check for any other matches below the current candy
         removeMatches(color, row - 1, col); // check for any other matches above the current candy
         removeMatches(color, row, col + 1); // check for any other matches to the right of the current candy
