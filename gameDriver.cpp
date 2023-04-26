@@ -386,19 +386,18 @@ void printStory(string filename) { //**redundant?**
 }
 
 
-
 void fight(Player &player, Monster &monster) {
-    int num_turns = 1; //used to calculate player's score at end of battle
+    int num_turns = 0; //used to calculate player's score at end of battle
     int choice;
     bool endBattle = false;
     int randNum;
 
 //player stats
-    int player_max_health = 100;
+    double player_max_health = 100;
     int player_health_percentage = (player.getHealth()/ player_max_health) * 100;
-    int player_damage = player.getCurrWeapon().getDamage();
-    int player_health = player.getHealth();
-    int player_protection = player.getCurrArmor().getProtection();
+    double player_damage = player.getCurrWeapon().getDamage();
+    double player_health = player.getHealth();
+    double player_protection = ((player.getCurrArmor().getProtection())/100);
     int player_num_hashtags = (player_health_percentage * 10) / 100;
     string player_weapon = player.getCurrWeapon().getName();
     string player_armor = player.getCurrArmor().getName();
@@ -421,6 +420,12 @@ void fight(Player &player, Monster &monster) {
 
     while(!endBattle) {
         system("clear");
+        num_turns++;
+
+        if(player_health <= 0) {
+            cout << "You were killed by " << monster.getName() << "! You lasted " << num_turns << " turns against the monster.\n";
+            break; //skip rest of loop iteration
+        }
 
         printAsciiArt("monster_battle.txt");
         cout << ".----------------------------------------------------.\n"
@@ -441,6 +446,8 @@ void fight(Player &player, Monster &monster) {
                 "|----------------------------------------------------|\n"
                 "| Turn Number: " << num_turns << "                   |\n"
                 "'----------------------------------------------------'\n";
+        
+        
         cout << "What would you like to do?\n[1-5]: ";
             while (true) {
                 cin >> choice;
@@ -456,14 +463,14 @@ void fight(Player &player, Monster &monster) {
         
         if(choice == 1) {
             cout << "You attack " << monster.getName() << " with the " << player_weapon << endl;
-            monster.setDamage(monster_health - player_damage);
+            monster.setHealth(monster_health - player_damage);
             sleep(0.5);
             cout << "You dealt " << player_damage << " points of damage to the monster!\n";
             sleep(0.5);
             if(monster_health <= 0) {
                 cout << "Your attack was fatal! " << monster.getName() << " was defeated in " << num_turns << " turns\n";
                 sleep(1);
-                break;
+                endBattle = true;
             }
         }
         else if(choice == 2) {
@@ -474,10 +481,10 @@ void fight(Player &player, Monster &monster) {
                 cout << "You blocked the attack!\n";
             }
             else {
-                cout << "You failed to block the attack and ";
+                cout << "You failed to block the attack and were dealt " << (monster_damage * player_protection) << "pts of damage!\n";
+                player.setHealth(player_health - (monster_damage * player_protection));
+                sleep(0.5);
             }
-            
-
         }
         else if(choice == 3) {
 
@@ -489,14 +496,9 @@ void fight(Player &player, Monster &monster) {
 
         }
         
-        num_turns++;
     }
-    
-
 }
 
-
-//*****not done**** - something is wrong with J Row
 void playCandyCrush(Player &player, string level_name, const int max_turns, const int target_score) {
     int num_turns = 0;
     // max_turns sets turn limit for player
@@ -685,6 +687,7 @@ int main() {
 
     Player player; //initialize player
     Merchant merchant; //initialize merchant
+    Monster monster;
     string username; //player username
     string input;
     char direction;
@@ -695,7 +698,10 @@ int main() {
     string level_3;
     int max_turns = 0; //determines how many tries a player gets to complete a candycrush level
     int target_points = 0; //determines how many points a player needs to meet in order to pass a level
-    //int level_count = 1;
+
+    
+
+
 
 //START GAME =============================================================================
 
@@ -773,6 +779,7 @@ int main() {
 
     if (difficulty == 1) {
         merchant = Merchant("easy_weapons_file.txt", "food_file.txt", "easy_armor_file.txt"); //initialize merchant
+        monster = Monster("monsters.txt");
         level_1 = "testLevel.txt";
         level_2 = "easy_level_3.txt";
         level_3 = "easy_level_2.txt";
@@ -782,6 +789,7 @@ int main() {
     }
     else if (difficulty == 2) {
         merchant = Merchant("moderate_weapons_file.txt", "food_file.txt", "moderate_armor_file.txt");
+        monster = Monster("monsters.txt");
         level_1 = "moderate_level_1.txt";
         level_2 = "moderate_level_2.txt";
         level_3 = "moderate_level_3.txt";
@@ -791,6 +799,7 @@ int main() {
     }
     else if (difficulty == 3) {
         merchant = Merchant("hard_weapons_file.txt", "food_file.txt", "hard_armor_file.txt");
+        monster = Monster("monsters.txt");
         level_1 = "hard_level_1.txt";
         level_2 = "hard_level_2.txt";
         level_3 = "hard_level_3.txt";
@@ -860,6 +869,7 @@ int main() {
                     }
                     if(input == "Y") {
                         playCandyCrush(player, level_1, max_turns, target_points); //play level one
+                        fight(player, monster);
                     }
                     else if(input == "N") {
                         continue;
@@ -875,6 +885,7 @@ int main() {
                     }
                     if(input == "Y") {
                         playCandyCrush(player, level_2, max_turns, target_points); //play level two
+                        fight(player, monster);
                     }
                     else if(input == "N") {
                         continue;
@@ -890,6 +901,7 @@ int main() {
                     }
                     if(input == "Y") {
                         playCandyCrush(player, level_3, max_turns, target_points); //play level three
+                        fight(player, monster);
                     }
                     else if(input == "N") {
                         continue;
