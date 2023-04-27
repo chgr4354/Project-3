@@ -331,10 +331,8 @@ cout << "\033[1;33m\
 }
 
 /*
-    This function prints out every past score of the user and uses a sorting algorithim to
-    determine which order to print them
+    1. This function prints out every attempt from players and uses a sorting algorithim to determine which order to print them
 */
-
 void printLeaderBoard(string leaderboard_file) {
     vector<string> leaderboard;
     int lb_count = 1;
@@ -345,17 +343,33 @@ void printLeaderBoard(string leaderboard_file) {
 
     cout << "\033[1;33m" << "   ---LEADERBOARD---" << "\033[0m\n"; //used stackoverflow for colored text syntax
     for(int i = 0; i < leaderboard.size(); i++) {
-        cout << lb_count << ") " << leaderboard[i] << " " << "\033[1;33m" << leaderboard[i+1] << "\033[0m\n";
+        cout << left << setw(4) << lb_count + ". " << setw(25) << leaderboard[i] << " " << setw(3) << "\033[1;33m" << leaderboard[i+1] << "\033[0m\n";
         i++;
         lb_count++;
     }
 }
 
 /*
+    1. This function writes to the leaderboard file
+*/
+void writeToLeaderboard(string leaderboard_file, Player player) {
+    ofstream leaderboard(leaderboard_file);
+
+    if(!leaderboard.fail()) {
+        int player_score = player.getTotalScore();
+        string player_name = player.getUsername();
+        leaderboard << player_name << "|" << player_score << "\n";
+    }
+    else
+        cout << "leaderboard file, \"" << leaderboard_file << "\" could not be opened";
+
+}
+
+
+/*
     This function will print an art composed of ascii values to add some depth to the expierience
     and exit the player
 */
-
 void printAsciiArt(string filename) {
     ifstream ascii(filename);
     if(!ascii.fail()) {
@@ -381,71 +395,84 @@ void printStory(string filename) { //**redundant?**
         }
     }
     else
-        cout << "story could not be opened\n";    
+        cout << "story could not be opened\n";
 
 }
 
 
-void fight(Player &player, Monster &monster) {
+int fight(Player &player, Monster &monster) { //returns int to make it easy to add alternate endings
+
+    player.setHealth(100);
+
     int num_turns = 0; //used to calculate player's score at end of battle
     int choice;
     bool endBattle = false;
     int randNum;
 
-//player stats
-    double player_max_health = 100;
-    int player_health_percentage = (player.getHealth()/ player_max_health) * 100;
-    double player_damage = player.getCurrWeapon().getDamage();
-    double player_health = player.getHealth();
-    double player_protection = ((player.getCurrArmor().getProtection())/100);
-    int player_num_hashtags = (player_health_percentage * 10) / 100;
     string player_weapon = player.getCurrWeapon().getName();
     string player_armor = player.getCurrArmor().getName();
+    const int player_max_health = 100;  
+    const int monster_max_health = monster.getHealth();
 
-//monster stats
-    int monster_damage = monster.getDamage();
-    int monster_health = monster.getHealth();
-    const int monster_max_health = monster.getHealth(); //does this work
-    int monster_health_percentage = (monster.getHealth()/ monster_max_health)* 100;
-    int monster_num_hashtags = (monster_health_percentage * 10) / 100;
-
-//healthbar (make this a for loop to animate the bar going down)
-    string player_health_bar = "[" + string(player_num_hashtags, '#') + string(10 - player_num_hashtags, ' ') + "]";
-    string monster_health_bar = "[" + string(monster_health_percentage, '#') + string(100 - monster_health_percentage, ' ') + "]";
-
-//Initialize battle===================================================================================================================
-
+//Initialize battle=========
+    system("clear");
     cout << "Watch out! It looks like \033[1;31m" << monster.getName() << "\033[0m has appeared!\n";
     cout << "It looks like you have to fight... get ready, " << player.getUsername() << endl;
+    sleep(5);
 
     while(!endBattle) {
+
+        //player stats
+        int player_protection = player.getCurrArmor().getProtection();
+        int player_num_hashtags = static_cast<int>((player.getHealth() / static_cast<double>(player_max_health)) * 25);
+        int monster_num_hashtags = static_cast<int>((monster.getHealth() / static_cast<double>(monster_max_health)) * 25);
+
+
         system("clear");
         num_turns++;
 
-        if(player_health <= 0) {
+        if(player.getHealth() <= 0) {
             cout << "You were killed by " << monster.getName() << "! You lasted " << num_turns << " turns against the monster.\n";
-            break; //skip rest of loop iteration
+            return -1; //player killed
         }
 
         printAsciiArt("monster_battle.txt");
         cout << ".----------------------------------------------------.\n"
                 "|                   BATTLE MENU                      |\n"
                 "|----------------------------------------------------|\n"
+                "| \033[1;33m" << left << setw(25) << monster.getName() +"'s Health:\033[0m [\033[1;31m";
+            for (int i = 0; i < monster_num_hashtags; i++) {
+                cout << "#";
+            }
+            for (int i = monster_num_hashtags; i < 25; i++) {
+                cout << " ";
+            }
+        cout << "\033[0m]\n"
+                "|----------------------------------------------------|\n"
+                "|                \033[1;33m" << setw(25) << player.getUsername() + "'s STATS" << "\033[0m           |\n"
+                "|----------------------------------------------------|\n"
+                "| Health:    " << right << setw(3) << player.getHealth() << "/" << player_max_health << "     "; 
+        cout << "[\033[1;31m";
+            for (int i = 0; i < player_num_hashtags; i++) {
+                cout << "#";
+            }
+            for (int i = player_num_hashtags; i < 25; i++) {
+                cout << " ";
+            }
+        cout << "\033[0m]\n"
+                "|\n"
+                "| Weapon:  " << player_weapon << "  [DMG: " << player.getCurrWeapon().getDamage() << "]\n"
+                "|\n"
+                "| Armor:  " << player_armor << "  [PROT: " << player.getCurrArmor().getProtection() << "]\n"
+                "|\n"
+                "| Food: "; player.printFoodInv(player.getFoodInv());
+        cout << "\n|----------------------------------------------------|\n"
                 "| [1] Attack                 [4] Special Attack      |\n"
                 "| [2] Block                  [5] Run Away            |\n"
-                "| [3] Consume food                                   |\n"
-                "|----------------------------------------------------|\n"
-                "|                   " << player.getUsername() << "'s STATS                     |\n"
-                "|----------------------------------------------------|\n"
-                "| Health:  " << player_health << "/" << player_max_health << " " << player_health_bar << "          |\n"
-                "| Weapon:             " << player_weapon << "  [DMG: " << player_damage << "          |\n"
-                "| Armor:  " << player_armor << "  [PROT: " << player_protection << "        |\n"
-                "| Food:               "; player.printFoodInv(player.getFoodInv());
-        cout << "|====================================================|\n"
-                "| " << monster.getName() << "'s Health: " << monster_health << "/" << monster_max_health << " " << monster_health_bar << "         |\n"
-                "|----------------------------------------------------|\n"
-                "| Turn Number: " << num_turns << "                   |\n"
-                "'----------------------------------------------------'\n";
+                "| [3] Consume food                                   |\n";        
+        cout << "|----------------------------------------------------|\n"
+                "|                \033[1;34mTurn Number: " << setw(3) << num_turns << "\033[0m                    |\n"
+                "'----------------------------------------------------'\n\n";
         
         
         cout << "What would you like to do?\n[1-5]: ";
@@ -461,77 +488,110 @@ void fight(Player &player, Monster &monster) {
                 }
             }
         
-        if(choice == 1) {
+        if(choice == 1) { //attack
             cout << "You attack " << monster.getName() << " with the " << player_weapon << endl;
-            monster.setHealth(monster_health - player_damage);
-            sleep(0.5);
-            cout << "You dealt " << player_damage << " points of damage to the monster!\n";
-            sleep(0.5);
-            if(monster_health <= 0) {
+            monster.setHealth(monster.getHealth() - player.getCurrWeapon().getDamage());
+            sleep(2);
+            cout << "You dealt " << player.getCurrWeapon().getDamage() << " points of damage!\n";
+            sleep(2);
+            if(monster.getHealth() <= 0) {
                 cout << "Your attack was fatal! " << monster.getName() << " was defeated in " << num_turns << " turns\n";
-                sleep(1);
+                sleep(3);
                 endBattle = true;
+                return 1; //player continues game
             }
+            cout << monster.getName() << " attacked you and did " << (monster.getDamage() - monster.getDamage() * (static_cast<double>(player_protection) / 100.0)) << "pts of damage!\n";
+            player.removeHealth(monster.getDamage() - monster.getDamage() * (static_cast<double>(player_protection) / 100.0));
+            sleep(4);
         }
-        else if(choice == 2) {
+        else if(choice == 2) { //block
             cout << "You choose to block " << monster.getName() << "'s incoming attack!\n";
-            sleep(0.5);
+            sleep(2);
             randNum = rand() % 10;
             if(randNum >= 5) {
                 cout << "You blocked the attack!\n";
+                sleep(2);
+                continue;
             }
             else {
-                cout << "You failed to block the attack and were dealt " << (monster_damage * player_protection) << "pts of damage!\n";
-                player.setHealth(player_health - (monster_damage * player_protection));
-                sleep(0.5);
+                cout << "You failed to block the attack!\n";
             }
+            cout << monster.getName() << " attacked you and did " << (monster.getDamage() - monster.getDamage() * (static_cast<double>(player_protection) / 100.0)) << "pts of damage!\n";
+            player.removeHealth(monster.getDamage() - monster.getDamage() * (static_cast<double>(player_protection) / 100.0));
+            sleep(4);
         }
         else if(choice == 3) //Consume food
         {
             int food_choice = 0; 
 
-            cout << "You chose to eat! " << endl;
-            sleep(0.5);
-            player.printFoodInv();
-
-            cout << "What would you like to consume? " << endl;
-            cin >> food_choice;
-
-            cout << "You chose " << player.getFood(food_choice) << endl;
-            sleep(0.5);
-
-            cout << "You have gained " << player.getFood(food_choice).getRecover() << " health!" << endl;
-
-            player.setHealth( player.getHealth() + player.getFood(food_choice).getRecover() );
-
+            cout << "You chose to consume\n";
+            sleep(1);
+            if(!player.getFoodInv().empty()) {
+                for (int i = 0; i < player.getFoodInv().size(); i++) { //print out food inventory
+                    cout << "" << left << i+1 << ". " << setw(20) << player.getFood(i).getName()
+                        << " (Recovery: " << player.getFood(i).getRecover()<< ")\n";
+                }
+                cout << "Which food would you like to eat?\n";
+                    while (true) {
+                        cin >> food_choice;
+                        if (cin.fail() || food_choice < 1 || food_choice > player.getFoodInv().size()) {
+                            cout << "Enter a valid choice: \n";
+                            cin.clear();
+                            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                        }
+                        else {
+                            break;
+                        }
+                    }
+                Food food = player.getFood(food_choice-1);
+                cout << "You chose " << food.getName() << endl;
+                sleep(1);
+                cout << "You have gained " << food.getRecover() << " health!\n";
+                sleep(2);
+                player.setHealth(player.getHealth() + food.getRecover());
+                cout << "food_choice: " << food_choice << endl;
+                cout << "food_choice-1: " << food_choice-1 << endl;
+                player.removeFood(food_choice);
+            }
+            else {
+                cout << "You have no food in your inventory!\n";
+                num_turns--; //do not increment turns in this case
+                sleep(2);
+            }
+            cout << monster.getName() << " attacked you and did " << (monster.getDamage() - monster.getDamage() * (static_cast<double>(player_protection) / 100.0)) << "pts of damage!\n";
+            player.removeHealth(monster.getDamage() - monster.getDamage() * (static_cast<double>(player_protection) / 100.0));
+            sleep(4);
         }
         else if(choice == 4) //Special Attack
         {
-            cout << "You chose your Special Attack on " << monster.getName() << "!" << endl;
-            monster.setHealth( monster_health - (player_damage * 2) );
-            sleep(0.5);
-            cout << "You did " << (player_damage * 2) << " against the Monster! " << endl;
-            sleep(0.5);
-            cout << "Sadly, you also did " << (player_damage / 2) << " against yourself!" << endl;
-            player.setHealth( player.getHealth() - (player_damage * 2));
+            cout << "You use your special attack on " << monster.getName() << "!\n";
+            monster.setHealth(monster.getHealth() - (player.getCurrWeapon().getDamage() * 2));
+            sleep(2);
+            cout << "You did " << (player.getCurrWeapon().getDamage() * 2) << " points of damage!\n";
+            sleep(2);
+            cout << "You also did " << (static_cast<double>(player.getCurrWeapon().getDamage()) / 2.0) << " against yourself...\n";
+            player.removeHealth(static_cast<int>(static_cast<double>(player.getCurrWeapon().getDamage()) / 2.0));
 
-            if(monster_health <= 0) {
+            if(monster.getHealth() <= 0) {
                 cout << "Your attack was fatal! " << monster.getName() << " was defeated in " << num_turns << " turns\n";
-                sleep(1);
+                sleep(3);
                 endBattle = true;
-                break;
+                return 1; //player continues game
             }
+            cout << monster.getName() << " attacked you and did " << (monster.getDamage() - monster.getDamage() * (static_cast<double>(player_protection) / 100.0)) / 2.0 << "pts of damage!\n";
+            player.removeHealth(monster.getDamage() - monster.getDamage() * (static_cast<double>(player_protection) / 100.0));
+            sleep(4);
         }
         else if(choice == 5) //if you run away the monster steals all your food
         { 
-            cout << "You decided to run away!" << endl;
-            sleep(0.5);
+            cout << "You decided to run away!\n";
+            sleep(1);
             player.removeAllFood();
-
-            cout << "Your food has been stolen!" << endl;
+            cout << "As you were running away you left all of your food behind.\n";
+            sleep(4);
             endBattle = true;
+            return 1; //player continues game
         }
-        
     }
 }
 
@@ -702,7 +762,6 @@ bool enterLevel(Map map, Player player) { //check if player is able to enter the
  * checks which room has the same coordinates as the player.
  * Then it returns the level of that room if the player is allowed to access it, and returns -1 otherwise
 **/
-
 int roomLevel(Map map, Player player) { //return level of the room the player stepped on (maybe change enterLevel to return type int and get rid of this)
     if(map.isRoomLocation(map.getPlayerRow(), map.getPlayerCol())) {
         for(int i = 0; i < map.getRoomCount(); i++) {
@@ -721,6 +780,8 @@ int roomLevel(Map map, Player player) { //return level of the room the player st
 
 int main() {
 
+    srand(time(NULL));
+
     Player player; //initialize player
     Merchant merchant; //initialize merchant
     Monster monster;
@@ -734,10 +795,7 @@ int main() {
     string level_3;
     int max_turns = 0; //determines how many tries a player gets to complete a candycrush level
     int target_points = 0; //determines how many points a player needs to meet in order to pass a level
-
-    
-
-
+    int fight_return = 0; //records outcome of player's fight with monster (0 = default)
 
 //START GAME =============================================================================
 
@@ -745,19 +803,18 @@ int main() {
     
     cout << "\033[1;33m" << "                                        [Y / N]" << "\033[0m\n" << endl;
     cin >> input;
+        while(input != "Y" && input != "N") {
+            cout << "Enter a valid input: " << endl;
+            cin >> input;
+        }
+        if(input == "N") {
+            return 0;
+        }   
+        else if(input == "Y") {
+            system("clear"); //clear screen
+        }
 
-    while(input != "Y" && input != "N") {
-        cout << "Enter a valid input: " << endl;
-        cin >> input;
-    }
-    if(input == "N")
-        return 0;
-    else if(input == "Y")
-        system("clear"); //clear screen
-
-//LEADER BOARD ===========================================================================
-
-    printLeaderBoard("mockLeaderboard.txt");
+    printLeaderBoard("leaderboard.txt");
     
 //STORY / INSTRUCTIONS ===================================================================
 
@@ -773,13 +830,11 @@ int main() {
         cout << "\nDo you wish for, " << "\033[1;33m" << username <<"\033[0m" << ", to be your name?\n";
         cout << "[Y/N] ";
         cin >> input;
-
-        while(input != "Y" && input != "N") {
-            cout << "Enter a valid input: \n";
-            cout << "[Y/N] ";
-            cin >> input;
-        }
-
+            while(input != "Y" && input != "N") {
+                cout << "Enter a valid input: \n";
+                cout << "[Y/N] ";
+                cin >> input;
+            }
         if(input == "Y") {
             system("clear");
             cout << "Hello, " <<"\033[1;33m"<< username <<"\033[0m"<< endl;
@@ -788,18 +843,18 @@ int main() {
             chooseNameAgain = false;
             player.setUsername(username);
         }
-        else if(input == "N")
+        else if(input == "N") {
             chooseNameAgain = true;
+        }
 
     } while(chooseNameAgain);
-
 
 //Ask for difficulty =====================================================================
     
     cout << "What difficulty would you like to pursue?\n\n";
     cout << "1: " << "\033[1;32m" << "EASY" << "\033[0m\n";
     cout << "2: " << "\033[1;31;33m" << "MODERATE" << "\033[0m\n";
-    cout << "3: " << "\033[1;31m" << "EXACERBATED PAIN" << "\033[0m\n\n";
+    cout << "3: " << "\033[1;31m" << "EXTREME PAIN" << "\033[0m\n\n";
     cout << "[1/2/3]: ";
         while (true) { //check for valid difficulty input
             cin >> difficulty;
@@ -812,15 +867,14 @@ int main() {
                 break;
             }
         }
-
     if (difficulty == 1) {
         merchant = Merchant("easy_weapons_file.txt", "food_file.txt", "easy_armor_file.txt"); //initialize merchant
-        monster = Monster("monsters.txt");
+        monster = Monster("monsters.txt"); //initialize monster
         level_1 = "testLevel.txt";
         level_2 = "easy_level_3.txt";
         level_3 = "easy_level_2.txt";
-        max_turns = 10;
-        target_points = 40;
+        max_turns = 10; //max number of candycrush level turns
+        target_points = 40; //minimum score for candycrush levels
         //printStory("easy_story.txt");
     }
     else if (difficulty == 2) {
@@ -862,7 +916,7 @@ int main() {
         cin >> direction;
         levelMap.move(direction);
 
-/*==testing=======
+/*=====testing=====
 
         cout << "player levels cleared: " << player.getLevelsCleared() << endl;
         cout << "player col: "<< levelMap.getPlayerCol() << endl;
@@ -889,7 +943,7 @@ int main() {
 
         if(enterLevel(levelMap, player)) {
 
-            cout << "\033[2J\033[1;1H"; //clear screen
+            cout << "\033[2J\033[1;1H"; //clear screen very quickly
             printStats(player);
             levelMap.displayMap();
 
@@ -905,11 +959,27 @@ int main() {
                     }
                     if(input == "Y") {
                         playCandyCrush(player, level_1, max_turns, target_points); //play level one
-                        fight(player, monster);
+                        fight_return = fight(player, monster);
+                        sleep(2);
+                        if(fight_return == -2) { //player runs away
+                            trade(merchant, player);
+                        }
+                        else if(fight_return == -1) { //player dies from monster
+                            endGame = true;
+                            continue;
+                        }
+                        else if(fight_return == 1) { //player kills monster
+                            trade(merchant, player);
+                        }
+                        else { //debugging
+                            cout << "fight returns wrong value: " << fight_return << endl;
+                            sleep(10);
+                        }
                     }
                     else if(input == "N") {
                         continue;
                     }
+                    fight_return = 0;
                     break;
                 case 2:
                     cout << "Do you want to enter this level?\n[Y/N]: ";
@@ -921,11 +991,27 @@ int main() {
                     }
                     if(input == "Y") {
                         playCandyCrush(player, level_2, max_turns, target_points); //play level two
-                        fight(player, monster);
+                        fight_return = fight(player, monster);
+                        sleep(2);
+                        if(fight_return == -2) { //player runs away
+                            trade(merchant, player);
+                        }
+                        else if(fight_return == -1) { //player dies from monster
+                            endGame = true;
+                            continue;
+                        }
+                        else if(fight_return == 1) { //player kills monster
+                            trade(merchant, player);
+                        }
+                        else { //debugging
+                            cout << "fight returns wrong value: " << fight_return << endl;
+                            sleep(10);
+                        }
                     }
                     else if(input == "N") {
                         continue;
                     }
+                    fight_return = 0;
                     break;
                 case 3:
                     cout << "Do you want to enter this level?\n[Y/N]: ";
@@ -937,11 +1023,29 @@ int main() {
                     }
                     if(input == "Y") {
                         playCandyCrush(player, level_3, max_turns, target_points); //play level three
-                        fight(player, monster);
+                        fight_return = fight(player, monster);
+                        sleep(3);
+                        endGame = true;
+                        if(fight_return == -2) { //player runs away
+                            endGame = true;
+                        }
+                        else if(fight_return == -1) { //player dies from monster
+                            endGame = true;
+                        }
+                        else if(fight_return == 1) { //player kills monster
+                            cout << "You beat the game!\n";
+                            sleep(3);
+                            endGame = true;
+                        }
+                        else { //debugging
+                            cout << "fight returns wrong value: " << fight_return << endl;
+                            sleep(10);
+                        }
                     }
                     else if(input == "N") {
                         continue;
                     }
+                    fight_return = 0;
                     break;
                 default:
                     cout << "This level is locked.\n";
@@ -950,23 +1054,33 @@ int main() {
             }
         }
 
-
     } while(endGame == false);
 
-        //implement candyCrush
-        //implement turns, score and money for player during game
+    system("clear");
+    printAsciiArt("the_end.txt");
+    writeToLeaderboard("leaderboard.txt", player);
+    printLeaderBoard("leaderboard.txt");
+
+/*I am obsessed with bars now
+    cout << "[\033[1;33m";
+    for(int i = 0; i < 60; i++) { //60 second bar until game shuts down
+        cout << "#";
+        sleep(1);
+    }
+    cout << "\033[0m";
+*/
+
+        //implement gifts and stars
         //balance trading
         //add option to buy multiple food items at a time
         //add player's inventories to shop
-        //make sure inventories work correctly
-        //implement player weapon inventory (?)
-        //Add monster fights
         //add command options under stats (?)
         //add misfortunes
         //protect against wrong inputs
         //finalize design of game
         //***change to reflect difficulty*** - gives more money to player - addTotalMoney() after candycrush level
-        //***add game ending scenarios*** - for candyCrush
+        //***game ending scenarios***
         //design levels and create files
+        //final boss (?)
 
 }
