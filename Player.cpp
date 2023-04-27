@@ -16,9 +16,11 @@ Player::Player() {
     total_score = 0;
 
     level_money = 0;
-    total_money = 200;
+    total_money = 500;
     
     total_level = 0; //Player Level
+
+    health = 100;
 
     levels_cleared = 0;
 }
@@ -152,11 +154,14 @@ int Player::getHealth() {
 void Player::setHealth(int new_health) {
     health = new_health;
 }
+void Player::removeHealth(int remove_health) {
+    health -= remove_health;
+}
 
-void Player::removeAllFood(Player &player) {
-    player.getFoodInv().clear();
+void Player::removeAllFood() {
+    food_inv.clear();
 }
 
 void Player::removeFood(int index) {
-    getFoodInv().erase(getFoodInv().begin() + index);
+    food_inv.erase(food_inv.begin() + index - 1);
 }
