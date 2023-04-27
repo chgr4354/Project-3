@@ -91,9 +91,10 @@ class Player
 
         int getHealth();
         void setHealth(int health);
+        void removeHealth(int remove_health);
 
         void removeFood(int index);
-        void removeAllFood(Player &player);
+        void removeAllFood();
 
 };
 #endif
