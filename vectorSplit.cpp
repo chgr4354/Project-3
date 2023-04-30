@@ -18,7 +18,6 @@ using namespace std;
  * returns: nothing (void)
 */
 
-
 void vectorSplit(string filename, const char delimiter, vector<string>& data) {
     ifstream file(filename); //create ifstream object
 
