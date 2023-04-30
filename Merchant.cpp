@@ -9,7 +9,8 @@ Merchant::Merchant() {
     // N/A
 }
 
-Merchant::Merchant(string weapon_file, string food_file, string armor_file) {
+
+Merchant::Merchant(string weapon_file, string food_file, string armor_file) { //initialize merchant constructor
     vector<string> data;
     vectorSplit(weapon_file, '|', data);
     for(int i = 0; i < data.size(); i+=4) {
@@ -34,71 +35,71 @@ Merchant::Merchant(string weapon_file, string food_file, string armor_file) {
 }
 
 //getters
-Weapon Merchant::getWeapon(int index) {
-    if(index < weapon_inv.size())
+Weapon Merchant::getWeapon(int index) { //get weapon from weapon inventory
+    if(index < weapon_inv.size()) //check for bounds
         return weapon_inv[index];
     else {
         Weapon weapon;
         return weapon;
     }
 }
-Food Merchant::getFood(int index) {
-    if(index < food_inv.size())
+Food Merchant::getFood(int index) { //get food from food inventory
+    if(index < food_inv.size()) //check for bounds
         return food_inv[index];
     else {
         Food food;
         return food;
     }
 }
-Armor Merchant::getArmor(int index) {
-    if(index < armor_inv.size())
+Armor Merchant::getArmor(int index) { //get armor from armor inventory
+    if(index < armor_inv.size()) //check for bounds
         return armor_inv[index];
     else {
         Armor armor;
         return armor;
     }
 }
-string Merchant::getName() {
+string Merchant::getName() { //get name
     return name;
 }
-vector<Weapon> Merchant::getWeaponInv() {
+vector<Weapon> Merchant::getWeaponInv() { //get weapon
     return weapon_inv;
 }
-vector<Armor> Merchant::getArmorInv() {
+vector<Armor> Merchant::getArmorInv() { //get armor
     return armor_inv;
 }
-vector<Food> Merchant::getFoodInv() {
+vector<Food> Merchant::getFoodInv() { //get food
     return food_inv;
 }
 
 //setters
-void Merchant::addWeapon(Weapon weapon) {
+void Merchant::addWeapon(Weapon weapon) { //add weapon to weapon weapon
     weapon_inv.push_back(weapon);
 }
-void Merchant::addFood(Food food) {
+void Merchant::addFood(Food food) { //add food to food inventory
     food_inv.push_back(food);
 }
-void Merchant::addArmor(Armor armor) {
+void Merchant::addArmor(Armor armor) { //add armor to armor inventory
     armor_inv.push_back(armor);
 }
-bool Merchant::removeWeapon(int index) {
-    if(index < weapon_inv.size()) {
+bool Merchant::removeWeapon(int index) { //remove weapon from weapon inventory
+    if(index < weapon_inv.size()) { //check for bounds
         weapon_inv.erase(weapon_inv.begin() + index);
         return true;
     }
     else
         return false;
 }
-bool Merchant::removeArmor(int index) {
-    if(index < armor_inv.size()) {
+bool Merchant::removeArmor(int index) { //remove armor from armor inventory
+    if(index < armor_inv.size()) { //check for bounds
         armor_inv.erase(armor_inv.begin() + index);
         return true;
     }
     else
         return false;
 }
-bool Merchant::removeFood(int index) {
-    if(index < food_inv.size()) {
+bool Merchant::removeFood(int index) { //remove food from food inventory
+    if(index < food_inv.size()) { //check for bounds
         food_inv.erase(food_inv.begin() + index);
         return true;
     }
