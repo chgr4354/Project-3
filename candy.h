@@ -7,25 +7,26 @@ using namespace std;
 
 class candy {
     private:
-        string color;
-        bool isSpecial;
-        bool isModifiable;
-        int rowLocation;
-        int columnLocation;
+        string color;       //color of candy
+        bool isSpecial;     //if candy is special color
+        bool isModifiable;  //if candy is modifiable
+        int rowLocation;    //row location of candy
+        int columnLocation; //column location of candy
 
     public:
-        candy();
-        candy(string color, int row, int column);
-        string getColor();
-        int getRow();
-        int getColumn();
-        void setColor(string color);
-        void setRow(int row);
-        void setColumn(int column);
-        void setAll(string color, int row, int column);
-        void move(char direction); //may not be necessary
-        bool isSpecialCandy();
-        bool isModifiableCandy();
+        candy();                                        //default constructor
+        candy(string color, int row, int column);       //parameterized constructor
+        string getColor();                              //get color
+        int getRow();                                   //get row
+        int getColumn();                                //get column
+
+        void setColor(string color);                    //set color
+        void setRow(int row);                           //set row
+        void setColumn(int column);                     //set column
+        void setAll(string color, int row, int column); //set color,row,column
+        void move(char direction);                      //move candy - not necessary
+        bool isSpecialCandy();                          //is special color
+        bool isModifiableCandy();                       //is modifiable
 
 };
 #endif
