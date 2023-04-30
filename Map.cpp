@@ -29,10 +29,6 @@ void Map::resetMap()
     player_position_[0] = 0;
     player_position_[1] = 0;
 
-    // set dungeon exit
-    //dungeon_exit_[0] = num_rows_ - 1;
-    //dungeon_exit_[1] = num_cols_ / 2;
-
     for (int i = 0; i < max_npcs_; i++)
     {
         npc_positions_[i][0] = -1;
@@ -54,7 +50,6 @@ void Map::resetMap()
             map_data_[i][j] = UNEXPLORED;
         }
     }
-    //map_data_[dungeon_exit_[0]][dungeon_exit_[1]] = EXIT;
 }
 
 // return player's row position
@@ -75,20 +70,6 @@ int Map::getRoomCount()
     return room_count_;
 }
 
-/* return dungeon exit row
-int Map::getDungeonExitRow()
-{
-    return dungeon_exit_[0];
-}
-*/
-
-/* return dungeon exit col
-int Map::getDungeonExitCol()
-{
-    return dungeon_exit_[1];
-}
-*/
-
 // set player position, if in range
 void Map::setPlayerPosition(int row, int col)
 {
@@ -98,17 +79,6 @@ void Map::setPlayerPosition(int row, int col)
         player_position_[1] = col;
     }
 }
-
-/* set dungeon exit position, if in range
-void Map::setDungeonExit(int row, int col)
-{
-    if (isOnMap(row, col))
-    {
-        dungeon_exit_[0] = row;
-        dungeon_exit_[1] = col;
-    }
-}
-*/
 
 // returns member variable num_rows_
 int Map::getNumRows()
@@ -237,20 +207,6 @@ bool Map::isExplored(int row, int col)
 }
 
 /*
- * Algorithm: checks if (row, col) is dungeon_exit_
- *
- *
-bool Map::isDungeonExit(int row, int col)
-{
-    if (row == dungeon_exit_[0] && col == dungeon_exit_[1])
-    {
-        return true;
-    }
-    return false;
-}
-*/
-
-/*
  * Algorithm: Checks if the given row and column on map is a free space
  * if row and column is not within the map boundaries
  *      return false
@@ -279,12 +235,6 @@ bool Map::isFreeSpace(int row, int col)
     {
         return false;
     }
-    /*
-    if (isDungeonExit(row, col))
-    {
-        return false;
-    }
-    */
     return true;
 }
 
