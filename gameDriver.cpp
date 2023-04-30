@@ -968,7 +968,14 @@ int main() {
                 break;
             }
         }
-    if (difficulty == 1) { //player chooses easy difficulty
+
+    /*
+        We are only making .txt files for the easy difficulty, however if we want to add different files 
+        for the other two difficulties, we simply have to paste them in below in the if/else-if statements.
+        We coded this to be easily modifiable so that all we have to do is add new files.
+    */
+    //player chooses easy difficulty
+    if (difficulty == 1) {
         merchant = Merchant("easy_weapons_file.txt", "food_file.txt", "easy_armor_file.txt"); //initialize merchant
         monster1 = Monster("monsters.txt"); //initialize monster
 
@@ -979,22 +986,28 @@ int main() {
         target_points = 40; //minimum score for candycrush levels
         //printStory("easy_story.txt");
     }
-    else if (difficulty == 2) { //player chooses moderate difficulty
-        merchant = Merchant("moderate_weapons_file.txt", "food_file.txt", "moderate_armor_file.txt");
+
+    //player chooses moderate difficulty
+    else if (difficulty == 2) {
+        merchant = Merchant("easy_weapons_file.txt", "food_file.txt", "easy_armor_file.txt");
         monster2 = Monster("monsters.txt");
-        level_1 = "moderate_level_1.txt";
-        level_2 = "moderate_level_2.txt";
-        level_3 = "moderate_level_3.txt";
+
+        level_1 = "easy_level_1.txt";
+        level_2 = "easy_level_2.txt";
+        level_3 = "easy_level_3.txt";
         max_turns = 8;
         target_points = 50;
         //printStory("moderate_story.txt");
     }
-    else if (difficulty == 3) { //player chooses hard difficulty
-        merchant = Merchant("hard_weapons_file.txt", "food_file.txt", "hard_armor_file.txt");
+
+    //player chooses hard difficulty
+    else if (difficulty == 3) {
+        merchant = Merchant("easy_weapons_file.txt", "food_file.txt", "easy_armor_file.txt");
         monster3 = Monster("monsters.txt");
-        level_1 = "hard_level_1.txt";
-        level_2 = "hard_level_2.txt";
-        level_3 = "hard_level_3.txt";
+
+        level_1 = "easy_level_1.txt";
+        level_2 = "easy_level_2.txt";
+        level_3 = "easy_level_3.txt";
         max_turns = 5;
         target_points = 60;
         //printStory("hard_story.txt");
