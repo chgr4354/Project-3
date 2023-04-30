@@ -25,5 +25,12 @@ int main()
     assert(food2.getName() == "LETTUCE");
     assert(food2.getCost() == 2000);
     assert(food2.getRecover() == 100);
-    
+
+    food2.setName("food2");
+    food2.setCost(20);
+    food2.setRecover(50);
+    assert(food2.getCost() == 20);
+    assert(food2.getName() == "food2");
+    assert(food2.getRecover() == 50);
+
 }
