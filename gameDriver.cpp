@@ -11,11 +11,22 @@
 #include "Merchant.h"
 #include "vectorSplit.h"
 
+//ascii art from https://patorjk.com/software/taag/#p=display&f=Graffiti&t=Type%20Something%20 unless otherwise noted
+
 //up-to-date compile command
 //g++ gameDriver.cpp Player.cpp Weapon.cpp Food.cpp Armor.cpp Merchant.cpp vectorSplit.cpp Map.cpp candy.cpp candyCrush.cpp Room.cpp Monster.cpp
 
 using namespace std;
 
+/*
+ * Algorithm: Handles trading interface of Merchant
+ * clear screen
+ * print trading UI by reading from files passed into Merchant
+ * player can buy weapons, armor, food or quit (menu requirements combined here and in monster fight menu)
+ * player chooses options, then merchant's inventory, player's inventory are updated
+ * Parameters: reference to Merchant, reference to Player
+ * Return: nothing (void)
+ */
 void trade(Merchant &merchant, Player &player) {
     system("clear");
     string input;
@@ -36,9 +47,8 @@ void trade(Merchant &merchant, Player &player) {
             "|  |____>===[_|_|_|_|_|_|_|_|_|====================-             |\n"
             "|   |__/   ' ' ' ' ' ' ' ' ' '                                   |\n"
             "|                                                                |\n"
-            "==================================================================\n"
+            "==============================\033[1;33mWeapons\033[0m=============================\n"
             "|                                                                |\n";
-    cout << "|  Weapons:                                                      |\n";
         for (int i = 0; i < merchant.getWeaponInv().size(); i++) {
             if(i == 5) { //this limits the amount of items displayed
                 break;
@@ -48,9 +58,8 @@ void trade(Merchant &merchant, Player &player) {
          << merchant.getWeapon(i).getDamage() << ")  |\n";
         }
     cout << "|                                                                |\n"
-            "==================================================================\n"
-            "|                                                                |\n"
-            "|  Armor:                                                        |\n";
+            "===============================\033[1;33mArmor\033[0m==============================\n"
+            "|                                                                |\n";
         for (int i = 0; i < merchant.getArmorInv().size(); i++) {
             if(i == 5) {
                 break;
@@ -60,9 +69,8 @@ void trade(Merchant &merchant, Player &player) {
          << merchant.getArmor(i).getProtection()<< ") |\n";
         }
     cout << "|                                                                |\n"
-            "==================================================================\n"
-            "|                                                                |\n"
-            "|  Food:                                                         |\n";
+            "===============================\033[1;33mFood\033[0m===============================\n"
+            "|                                                                |\n";
         for (int i = 0; i < merchant.getFoodInv().size(); i++) {
             if(i == 5) {
                 break;
@@ -72,10 +80,14 @@ void trade(Merchant &merchant, Player &player) {
          << merchant.getFood(i).getRecover()<< ")   |\n";
         }
     cout << "|                                                                |\n"
+            "=============================\033[1;33mInventory\033[0m============================\n"
+            "|\n"
+            "|  \033[1;33mGold\033[0m: " << left << setw(7) << player.getTotalMoney() << "\n"
+            "|  Food:  "; player.printFoodInv(player.getFoodInv()); cout << "\n"
+            "|  Weapon: \033[1;31m" << player.getCurrWeapon().getName() << "\033[0m (Dmg: " << player.getCurrWeapon().getDamage() << ")\n"
+            "|  Armor: \033[1;31m" << player.getCurrArmor().getName() << "\033[0m (Prot: " << player.getCurrArmor().getProtection() << ")\n"
+            "|\n"
             "==================================================================\n"
-            "|                                                                |\n"
-            "|  \033[1;33mGold\033[0m: "<< left << setw(7) <<player.getTotalMoney() <<
-            "                                                 |\n"
             "|                                                                |\n"
             "|  Type the item number to purchase, or \033[1;31m'Q' to leave shop.\033[0m       |\n"
             "|                                                                |\n"
@@ -305,10 +317,13 @@ void trade(Merchant &merchant, Player &player) {
 
 }
 
-
+/*
+ * Algorithm: prints player statistics
+ * print player's stats by calling player member functions
+ * Parameters: player (Player)
+ * Return: nothing (void)
+ */
 void printStats(Player player) {
-
-//**do not indent**
 
 cout << "\033[1;33m\
 +---------------+ \n\
@@ -323,106 +338,143 @@ cout << "\033[1;33m\
 |          Food | "; player.printFoodInv(player.getFoodInv()); cout << "\n\
 |        Weapon | " << player.getCurrWeapon().getName() << "\n\
 |         Armor | " << player.getCurrArmor().getName() << "\n\
-+---------------+\n\
 +---------------+ \033[0m\n\n";
-
-    //ITEMS: have a file with cool items that can affect the players stats - beneficial or misfortune
 
 }
 
 /*
-    1. This function prints out every attempt from players and uses a sorting algorithim to determine which order to print them
-*/
+ * Algorithm: Prints out sorted leaderboard of previous attempts at game
+ * call vectorsplit function and pass file items into new leaderboard vector
+ * sort leaderboard vector using bubble sort
+ * Parameters: leaderboard_file (string)
+ * Return: nothing (void)
+ */
 void printLeaderBoard(string leaderboard_file) {
     vector<string> leaderboard;
-    int lb_count = 1;
+    int count = 1; //numbering for output
 
-    vectorSplit(leaderboard_file, '|', leaderboard);
+    vectorSplit(leaderboard_file, '|', leaderboard); //save file data to leaderboard vector
     
-//***implement sorting algorithm here***
+//bubble sort algorithm:
+//sort leaderboard vector 
+    if(!leaderboard.empty()) {
+        for(int i = 0; i < leaderboard.size(); i++) {
+            for(int j = 1; j < leaderboard.size() - i - 1; j+=2) {
+                if(stoi(leaderboard[j]) < stoi(leaderboard[j+2])) {
+                    //swap scores
+                    string tempScore = leaderboard[j];
+                    leaderboard[j] = leaderboard[j+2];
+                    leaderboard[j+2] = tempScore; 
 
-    cout << "\033[1;33m" << "   ---LEADERBOARD---" << "\033[0m\n"; //used stackoverflow for colored text syntax
-    for(int i = 0; i < leaderboard.size(); i++) {
-        cout << left << setw(4) << lb_count + ". " << setw(25) << leaderboard[i] << " " << setw(3) << "\033[1;33m" << leaderboard[i+1] << "\033[0m\n";
-        i++;
-        lb_count++;
+                    //swap names
+                    string tempName = leaderboard[j-1];
+                    leaderboard[j-1] = leaderboard[j+1];
+                    leaderboard[j+1] = tempName;
+                }
+            }
+        }
+    }
+
+//print leaderboard vector
+    cout << "\033[1;33m" << "---LEADERBOARD---" << "\033[0m\n"; //used stackoverflow for colored text syntax
+    for(int i = 0; i < leaderboard.size(); i+=2) {
+        cout << right << setw(4) << count << ". " << left << setw(25) << leaderboard[i] << " " << setw(3) << "\033[1;33m" << leaderboard[i+1] << "\033[0m\n";
+        count++;
     }
 }
 
 /*
-    1. This function writes to the leaderboard file
-*/
+ * Algorithm: writes player's score and username to leaderboard file
+ * create ofstream object using leaderboard_file and append mode
+ * add data to file if file can be opened
+ * Parameters: leaderboard_file (string), player (Player)
+ * Return: nothing (void)
+ */
 void writeToLeaderboard(string leaderboard_file, Player player) {
-    ofstream leaderboard(leaderboard_file);
+    ofstream leaderboard(leaderboard_file, ios::app); //ios::app opens the file in append mode, which will add new data to end of file - syntax from stackexchange
 
     if(!leaderboard.fail()) {
         int player_score = player.getTotalScore();
         string player_name = player.getUsername();
-        leaderboard << player_name << "|" << player_score << "\n";
+        leaderboard << "\n" << player_name << "|" << player_score;
     }
-    else
+    
+    else {
         cout << "leaderboard file, \"" << leaderboard_file << "\" could not be opened";
+    }
+    leaderboard.close();
 
 }
 
-
 /*
-    This function will print an art composed of ascii values to add some depth to the expierience
-    and exit the player
-*/
+ * Algorithm: prints ascii art to console
+ * pass in filename to ifstream object
+ * read data from file if file can be opened
+ * print out each line from file to console
+ * Parameters: filename (string)
+ * Return: nothing (void)
+ */
 void printAsciiArt(string filename) {
     ifstream ascii(filename);
-    if(!ascii.fail()) {
+    if(!ascii.fail()) { //check file can be opened
         string line;
-        while(getline(ascii, line)) {
+        while(getline(ascii, line)) { //print each line from file
             cout << line << endl;
         }
     }
     else
-        cout << "ascii art could not be printed\n";
+        cout << "\"" << filename << "\" could not be printed\n";
 }
 
 /*
-    1. This function prints the story of Color Crush and explains the motivations for the characters actions
-    2. Than there will be instructions printed on how exactly the game works and how to play it
-*/
-void printStory(string filename) { //**redundant?**
-    ifstream story(filename);
-    if(!story.fail()) {
-        string line;
-        while(getline(story, line)) {
-            cout << line << endl;
-        }
-    }
-    else
-        cout << "story could not be opened\n";
-
-}
-
-
+ * Algorithm: handles fight between player and monster after each candyCrush level
+ * reset player health
+ * print battle start sequence
+ * while battle is not over
+ * check if player is dead
+ * print battle UI
+ * player chooses option and stats are updated accordingly
+ * game ends if player dies
+ * player continues to next level if they defeat the monster
+ * Parameters: reference to player, reference to monster
+ * Return: int
+ */
 int fight(Player &player, Monster &monster) { //returns int to make it easy to add alternate endings
 
     player.setHealth(100);
 
     int num_turns = 0; //used to calculate player's score at end of battle
-    int choice;
+    int choice; //player's battle choice
     bool endBattle = false;
     int randNum;
 
-    string player_weapon = player.getCurrWeapon().getName();
-    string player_armor = player.getCurrArmor().getName();
+    string player_weapon = player.getCurrWeapon().getName(); //name of player's weapon
+    string player_armor = player.getCurrArmor().getName(); //name of player's armor
     const int player_max_health = 100;  
     const int monster_max_health = monster.getHealth();
 
-//Initialize battle=========
+//Initialize battle
     system("clear");
     cout << "Watch out! It looks like \033[1;31m" << monster.getName() << "\033[0m has appeared!\n";
-    cout << "It looks like you have to fight... get ready, " << player.getUsername() << endl;
-    sleep(5);
+    sleep(2);
+    cout << "\033[1;34m";
+    printAsciiArt("battle_start.txt");
+    cout << "\033[0m";
+    cout << "\033[1;31m";
+    printAsciiArt("monster_battle.txt"); //credit - https://www.asciiart.eu/video-games/pokemon
+    cout << "\033[0m\n";
+    cout << "\033[1;33m";
+    for(int i = 0; i < 75; i++) {
+        cout << "#";
+        cout.flush(); //from cpluplus.com forum
+        usleep(50000); //uses microseconds instead of seconds to make a really cool bar
+    }
+    cout << "\033[0m";
 
-    while(!endBattle) {
+    while(!endBattle) { //keep looping until player or monster dies
+        int randNum = rand() % 3 + 1;
 
-        //player stats
+        //stats
         int player_protection = player.getCurrArmor().getProtection();
         int player_num_hashtags = static_cast<int>((player.getHealth() / static_cast<double>(player_max_health)) * 25);
         int monster_num_hashtags = static_cast<int>((monster.getHealth() / static_cast<double>(monster_max_health)) * 25);
@@ -431,17 +483,18 @@ int fight(Player &player, Monster &monster) { //returns int to make it easy to a
         system("clear");
         num_turns++;
 
+        //check if player is dead
         if(player.getHealth() <= 0) {
             cout << "You were killed by " << monster.getName() << "! You lasted " << num_turns << " turns against the monster.\n";
             return -1; //player killed
         }
 
-        printAsciiArt("monster_battle.txt");
+        //print battle UI
         cout << ".----------------------------------------------------.\n"
                 "|                   BATTLE MENU                      |\n"
                 "|----------------------------------------------------|\n"
                 "| \033[1;33m" << left << setw(25) << monster.getName() +"'s Health:\033[0m [\033[1;31m";
-            for (int i = 0; i < monster_num_hashtags; i++) {
+            for (int i = 0; i < monster_num_hashtags; i++) { //monster healthbar
                 cout << "#";
             }
             for (int i = monster_num_hashtags; i < 25; i++) {
@@ -453,7 +506,7 @@ int fight(Player &player, Monster &monster) { //returns int to make it easy to a
                 "|----------------------------------------------------|\n"
                 "| Health:    " << right << setw(3) << player.getHealth() << "/" << player_max_health << "     "; 
         cout << "[\033[1;31m";
-            for (int i = 0; i < player_num_hashtags; i++) {
+            for (int i = 0; i < player_num_hashtags; i++) { //player healthbar
                 cout << "#";
             }
             for (int i = player_num_hashtags; i < 25; i++) {
@@ -490,24 +543,25 @@ int fight(Player &player, Monster &monster) { //returns int to make it easy to a
         
         if(choice == 1) { //attack
             cout << "You attack " << monster.getName() << " with the " << player_weapon << endl;
-            monster.setHealth(monster.getHealth() - player.getCurrWeapon().getDamage());
+            monster.setHealth(monster.getHealth() - player.getCurrWeapon().getDamage()); //update monster health
             sleep(2);
             cout << "You dealt " << player.getCurrWeapon().getDamage() << " points of damage!\n";
             sleep(2);
-            if(monster.getHealth() <= 0) {
+            if(monster.getHealth() <= 0) { //monster dies
                 cout << "Your attack was fatal! " << monster.getName() << " was defeated in " << num_turns << " turns\n";
                 sleep(3);
                 endBattle = true;
-                return 1; //player continues game
+                return num_turns; //player continues to next level
             }
             cout << monster.getName() << " attacked you and did " << (monster.getDamage() - monster.getDamage() * (static_cast<double>(player_protection) / 100.0)) << "pts of damage!\n";
-            player.removeHealth(monster.getDamage() - monster.getDamage() * (static_cast<double>(player_protection) / 100.0));
+            player.removeHealth(monster.getDamage() - monster.getDamage() * (static_cast<double>(player_protection) / 100.0)); //update player health
             sleep(4);
         }
-        else if(choice == 2) { //block
-            cout << "You choose to block " << monster.getName() << "'s incoming attack!\n";
+        else if(choice == 2) { //block //random menu requirement 1
+            cout << "You choose to block " << monster.getName() << "'s incoming attack!\n"; 
             sleep(2);
             randNum = rand() % 10;
+            //50% chance of player blocking attack
             if(randNum >= 5) {
                 cout << "You blocked the attack!\n";
                 sleep(2);
@@ -517,7 +571,7 @@ int fight(Player &player, Monster &monster) { //returns int to make it easy to a
                 cout << "You failed to block the attack!\n";
             }
             cout << monster.getName() << " attacked you and did " << (monster.getDamage() - monster.getDamage() * (static_cast<double>(player_protection) / 100.0)) << "pts of damage!\n";
-            player.removeHealth(monster.getDamage() - monster.getDamage() * (static_cast<double>(player_protection) / 100.0));
+            player.removeHealth(monster.getDamage() - monster.getDamage() * (static_cast<double>(player_protection) / 100.0)); //update player health
             sleep(4);
         }
         else if(choice == 3) //Consume food
@@ -526,7 +580,7 @@ int fight(Player &player, Monster &monster) { //returns int to make it easy to a
 
             cout << "You chose to consume\n";
             sleep(1);
-            if(!player.getFoodInv().empty()) {
+            if(!player.getFoodInv().empty()) { //check that player's food inventory is not empty (do not increment turns if empty)
                 for (int i = 0; i < player.getFoodInv().size(); i++) { //print out food inventory
                     cout << "" << left << i+1 << ". " << setw(20) << player.getFood(i).getName()
                         << " (Recovery: " << player.getFood(i).getRecover()<< ")\n";
@@ -548,10 +602,10 @@ int fight(Player &player, Monster &monster) { //returns int to make it easy to a
                 sleep(1);
                 cout << "You have gained " << food.getRecover() << " health!\n";
                 sleep(2);
-                player.setHealth(player.getHealth() + food.getRecover());
+                player.setHealth(player.getHealth() + food.getRecover()); //update player health
                 cout << "food_choice: " << food_choice << endl;
                 cout << "food_choice-1: " << food_choice-1 << endl;
-                player.removeFood(food_choice);
+                player.removeFood(food_choice); //remove food from player's inventory
             }
             else {
                 cout << "You have no food in your inventory!\n";
@@ -559,43 +613,56 @@ int fight(Player &player, Monster &monster) { //returns int to make it easy to a
                 sleep(2);
             }
             cout << monster.getName() << " attacked you and did " << (monster.getDamage() - monster.getDamage() * (static_cast<double>(player_protection) / 100.0)) << "pts of damage!\n";
-            player.removeHealth(monster.getDamage() - monster.getDamage() * (static_cast<double>(player_protection) / 100.0));
+            player.removeHealth(monster.getDamage() - monster.getDamage() * (static_cast<double>(player_protection) / 100.0)); //update player health
             sleep(4);
         }
-        else if(choice == 4) //Special Attack
+        else if(choice == 4) //Special Attack //random menu requirement 2
         {
             cout << "You use your special attack on " << monster.getName() << "!\n";
-            monster.setHealth(monster.getHealth() - (player.getCurrWeapon().getDamage() * 2));
+            monster.setHealth(monster.getHealth() - (player.getCurrWeapon().getDamage() * randNum)); //update monster health
             sleep(2);
-            cout << "You did " << (player.getCurrWeapon().getDamage() * 2) << " points of damage!\n";
+            cout << "You did " << (player.getCurrWeapon().getDamage() * randNum) << " points of damage!\n";
             sleep(2);
             cout << "You also did " << (static_cast<double>(player.getCurrWeapon().getDamage()) / 2.0) << " against yourself...\n";
-            player.removeHealth(static_cast<int>(static_cast<double>(player.getCurrWeapon().getDamage()) / 2.0));
+            player.removeHealth(static_cast<int>(static_cast<double>(player.getCurrWeapon().getDamage()) / 2.0)); //update player health
 
-            if(monster.getHealth() <= 0) {
+            if(monster.getHealth() <= 0) { //monster dies from attack
                 cout << "Your attack was fatal! " << monster.getName() << " was defeated in " << num_turns << " turns\n";
                 sleep(3);
                 endBattle = true;
-                return 1; //player continues game
+                return num_turns; //player continues game
             }
             cout << monster.getName() << " attacked you and did " << (monster.getDamage() - monster.getDamage() * (static_cast<double>(player_protection) / 100.0)) / 2.0 << "pts of damage!\n";
-            player.removeHealth(monster.getDamage() - monster.getDamage() * (static_cast<double>(player_protection) / 100.0));
+            player.removeHealth(monster.getDamage() - monster.getDamage() * (static_cast<double>(player_protection) / 100.0)); //update player health
             sleep(4);
         }
-        else if(choice == 5) //if you run away the monster steals all your food
+        else if(choice == 5) //run away 
         { 
             cout << "You decided to run away!\n";
             sleep(1);
-            player.removeAllFood();
+            player.removeAllFood(); //if you run away the monster steals all your food
             cout << "As you were running away you left all of your food behind.\n";
             sleep(4);
             endBattle = true;
-            return 1; //player continues game
+            return -2; //player continues game
         }
     }
+    return 0; //base case
 }
 
-void playCandyCrush(Player &player, string level_name, const int max_turns, const int target_score) {
+/*
+ * Algorithm: handles player interactions with candy crush level
+ * While player has not completed level or lost level
+ * print candyCrush UI
+ * check if player has more turns
+ * if yes, prompt player to swap candies
+ * swap candies and update the board and player's score
+ * exit level when player has no more turns
+ * exit game if player has no more turns and has not met level threshold
+ * Parameters: reference to player, level_name (string), max_turns (const int), target_score (const int)
+ * Return: int
+ */
+int playCandyCrush(Player &player, string level_name, const int max_turns, const int target_score) {
     int num_turns = 0;
     // max_turns sets turn limit for player
     // target_score sets minimum score threshold for player
@@ -605,11 +672,12 @@ void playCandyCrush(Player &player, string level_name, const int max_turns, cons
     string direction;
     string input;
     bool endGame = false;
-    bool promptContinueGame = false;
+    bool promptContinueGame = false; //do not ask player to continue each turn if they choose to continue playing for highscore
 
-    candyCrush candy_crush(level_name);
+    candyCrush candy_crush(level_name); //initialize candyCrush object
 
     while(!endGame) {
+        //initialize board and candyCrush/player stats
         system("clear");
         cout << " _________________________________________\n"
                 "/ \\                                       \\ \n"
@@ -621,6 +689,7 @@ void playCandyCrush(Player &player, string level_name, const int max_turns, cons
                 "   |     ___________________               |\n"
                 "   |    |  Swaps Left: " << setw(5) << max_turns - num_turns << "|              |\n"
                 "   |    |___________________|              |\n"
+                "   |    Minimum score to pass: \033[1;33m" << left << setw(3) << target_score << "\033[0m         |\n"
                 "   |                                       |\n"
                 "   |        ###  INSTRUCTIONS  ###         |\n"
                 "   |                                       |\n"
@@ -633,19 +702,27 @@ void playCandyCrush(Player &player, string level_name, const int max_turns, cons
                 "   |     given number of turns to pass     |\n"
                 "   |                                       |\n"
                 "    \\______________________________________/\n\n";
-        candy_crush.displayBoard();
+        candy_crush.displayBoard(); //print board to console
 
-        if(num_turns == max_turns) {
+        if(num_turns == max_turns) { //player has no more turns and must continue to next level
             cout << "You have no more turns!\n";
             sleep(2);
             endGame = true;
-            if(candy_crush.getScore() < target_score) {
-    //game ending scenario
+            if(candy_crush.getScore() < target_score) { //player has no more turns and has not met score threshold
+                player.addTotalScore(candy_crush.getScore()); //adds level score to total player score (total_score = total_score + level_score)
+                player.setLevelScore(0); //reset level score when player exits level
+                player.increaseLevelsCleared();
+                return -2; //player does not reach target score and game ends
             }
+            player.addTotalScore(candy_crush.getScore()); //adds level score to total player score
+            player.setLevelScore(0); //reset level score when player exits level
+            player.addTotalMoney(300); //give money to player for the next merchant encounter
+            player.increaseLevelsCleared(); //increment levels cleared by player by one
+            return -1; //player reaches target score and level ends; game continues
         }
 
 //===begin prompting player========================================================
-        cout << "Enter row [A-J]: ";    //FIX ROW INPUT - multiple input error
+        cout << "Enter row [A-J]: ";
         cin >> row_input;
         row = int(row_input) - 65;
             while(row < 0  || row > 9 ) {
@@ -658,8 +735,8 @@ void playCandyCrush(Player &player, string level_name, const int max_turns, cons
                 cin >> col_input;
                 if (cin.fail() || col_input < 1 || col_input > 10) {
                     cout << "Enter a valid column [1-10]: \n";
-                    cin.clear();
-                    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                    cin.clear(); //clears error
+                    cin.ignore(numeric_limits<streamsize>::max(), '\n'); //syntax from stackexchange - ignores characters up to delimiter
                 }
                 else {
                     break;
@@ -671,15 +748,15 @@ void playCandyCrush(Player &player, string level_name, const int max_turns, cons
                 cout << "Enter a valid direction [w/a/s/d]: ";
                 cin >> direction;
             }
-        if(direction == "w") {
-            if(candy_crush.swap(row, col_input, row-1, col_input)) {
-                candy_crush.removeMatches(candy_crush.getCandy(row-1, col_input).getColor(), row-1, col_input);
-                candy_crush.removeMatches(candy_crush.getCandy(row, col_input).getColor(), row, col_input);
-                candy_crush.generateCandy();
-                num_turns++;
+        if(direction == "w") { //swap candy with candy above
+            if(candy_crush.swap(row, col_input, row-1, col_input)) { //only remove matching candies if swap returns true - swap returns true when candies are on the board and are modifiable
+                candy_crush.removeMatches(candy_crush.getCandy(row-1, col_input).getColor(), row-1, col_input); //call remove matches on player's selected candy after it has been swapped
+                candy_crush.removeMatches(candy_crush.getCandy(row, col_input).getColor(), row, col_input); // call remove matches on previous location of player's selected candy
+                candy_crush.generateCandy(); //generate candies at every location that removeMatches has affected
+                num_turns++; //increment number of turns
             }
         }
-        else if (direction == "a") {
+        else if (direction == "a") { //swap candy with candy to the left
             if(candy_crush.swap(row, col_input, row, col_input-1)) {
                 candy_crush.removeMatches(candy_crush.getCandy(row, col_input-1).getColor(), row, col_input-1);
                 candy_crush.removeMatches(candy_crush.getCandy(row, col_input).getColor(), row, col_input);
@@ -687,7 +764,7 @@ void playCandyCrush(Player &player, string level_name, const int max_turns, cons
                 num_turns++;
             }
         }
-        else if(direction == "s") {
+        else if(direction == "s") { //swap candy with candy below
             if(candy_crush.swap(row, col_input, row+1, col_input)) {
                 candy_crush.removeMatches(candy_crush.getCandy(row+1, col_input).getColor(), row+1, col_input);
                 candy_crush.removeMatches(candy_crush.getCandy(row, col_input).getColor(), row, col_input);
@@ -695,7 +772,7 @@ void playCandyCrush(Player &player, string level_name, const int max_turns, cons
                 num_turns++;
             }
         }
-        else if(direction == "d") {
+        else if(direction == "d") { //swap candy with candy to the right
             if(candy_crush.swap(row, col_input, row, col_input+1)) {
                 candy_crush.removeMatches(candy_crush.getCandy(row, col_input+1).getColor(), row, col_input+1);
                 candy_crush.removeMatches(candy_crush.getCandy(row, col_input).getColor(), row, col_input);
@@ -706,9 +783,14 @@ void playCandyCrush(Player &player, string level_name, const int max_turns, cons
         }
         else if(direction == "Q123") { //This can skip the level for testing purposes
             endGame = true;
+            player.addTotalScore(candy_crush.getScore()); //adds level score to total player score
+            player.setLevelScore(0); //reset level score when player exits level
+            player.addTotalMoney(300);
+            player.increaseLevelsCleared();
+            return -3; //quitting level for testing other features
         }
 
-        if(candy_crush.getScore() >= target_score && !promptContinueGame) {
+        if(candy_crush.getScore() >= target_score && !promptContinueGame) { //player reaches target score and can choose to continue playing for higher score or continue game
             cout << "You have reached the target score for this level!\n";
             cout << "Would you like to keep playing for a higher score?\n[Y/N]: ";
             cin >> input;
@@ -716,36 +798,45 @@ void playCandyCrush(Player &player, string level_name, const int max_turns, cons
                     cout << "Enter a valid choice:  \n";
                     cin >> input;
                 }
-            if(input == "Y") {
+            if(input == "Y") { //player chooses to play for higher score
                 cout << "Good luck!\n";
                 sleep(1); 
                 player.setLevelScore(candy_crush.getScore());
                 promptContinueGame = true;
                 continue;
             }
-            else if(input == "N") {
+            else if(input == "N") { //player chooses to continue to monster fight
                 cout << "You continue on your journey...\n";
                 sleep(1.5);
                 endGame = true;
+                player.addTotalScore(candy_crush.getScore()); //adds level score to total player score
+                player.setLevelScore(0); //reset level score when player exits level
+                player.addTotalMoney(300);
+                player.increaseLevelsCleared();
+                return 1; //player finishes level after reaching target score
             }
         }
 
-        player.setLevelScore(candy_crush.getScore());
+        player.setLevelScore(candy_crush.getScore()); //update player's level score
 
     }
-    player.addTotalScore(candy_crush.getScore()); //adds level score to total player score (total_score = total_score + level_score)
+    player.addTotalScore(candy_crush.getScore()); //adds level score to total player score
     player.setLevelScore(0); //reset level score when player exits level
-    player.addTotalMoney(300); //***change to reflect difficulty*** - gives more money to player
+    player.addTotalMoney(300);
     player.increaseLevelsCleared();
 
-    //***add game ending scenarios***
+    return 0; //default return case
 
 }
 
-/**
- * This function loops through the vector of rooms in the map class, and
- * it returns true if it found the room with the same coordinates as the player
-**/
+/*
+ * Algorithm: check if player can enter candyCrush level
+ * check if player is stepping on room
+ * loop through vector of rooms created when addRoom() is called in main function
+ * return true if player is stepping on a room in the vector
+ * Parameters: map (Map), player (Player)
+ * Return: bool
+ */
 bool enterLevel(Map map, Player player) { //check if player is able to enter the level
     if(map.isRoomLocation(map.getPlayerRow(), map.getPlayerCol())) {
         for(int i = 0; i < map.getRoomCount(); i++) {
@@ -757,11 +848,13 @@ bool enterLevel(Map map, Player player) { //check if player is able to enter the
     return false;
 }
 
-/**
- * This function loops through the vector of rooms in the map class, and
- * checks which room has the same coordinates as the player.
- * Then it returns the level of that room if the player is allowed to access it, and returns -1 otherwise
-**/
+/*
+ * Algorithm: returns level of the room that the player is stepping on
+ * exactly the same as enterLevel(), but checks is player's level is high enough to enter room
+ * returns room level if player's level is high enough, and returns -1 if not high enough
+ * Parameters: map (Map), player (Player)
+ * Return: int
+ */
 int roomLevel(Map map, Player player) { //return level of the room the player stepped on (maybe change enterLevel to return type int and get rid of this)
     if(map.isRoomLocation(map.getPlayerRow(), map.getPlayerCol())) {
         for(int i = 0; i < map.getRoomCount(); i++) {
@@ -778,24 +871,30 @@ int roomLevel(Map map, Player player) { //return level of the room the player st
     return -1;
 }
 
+
+//main funciton handles order of operations for game
 int main() {
 
     srand(time(NULL));
 
     Player player; //initialize player
     Merchant merchant; //initialize merchant
-    Monster monster;
+    Monster monster1; //initialize monsters for each of the three candyCrush levels
+    Monster monster2;
+    Monster monster3;
     string username; //player username
-    string input;
-    char direction;
-    int difficulty = 0;
-    bool endGame = false;
-    string level_1;
+    string input; //user input
+    char direction; //directin player chooses to move
+    int difficulty = 0; //player's difficulty selection
+    bool endGame = false; //determines if game should end
+    string level_1; //names of candyCrush levels
     string level_2;
     string level_3;
     int max_turns = 0; //determines how many tries a player gets to complete a candycrush level
     int target_points = 0; //determines how many points a player needs to meet in order to pass a level
     int fight_return = 0; //records outcome of player's fight with monster (0 = default)
+    int candy_return = 0; //records outcome of player's candy crush level
+    int fight_score = 0; //calculates score player achieved from fighting monster
 
 //START GAME =============================================================================
 
@@ -814,11 +913,13 @@ int main() {
             system("clear"); //clear screen
         }
 
+    system("clear");
     printLeaderBoard("leaderboard.txt");
     
 //STORY / INSTRUCTIONS ===================================================================
 
-    //printStory(); (can instead happen directly after the player chooses difficulty)
+    //this is where the story behind the game would be printed
+    //printStory();
 
 //GET USERNAME ===========================================================================
 
@@ -835,7 +936,7 @@ int main() {
                 cout << "[Y/N] ";
                 cin >> input;
             }
-        if(input == "Y") {
+        if(input == "Y") { //player confirms username
             system("clear");
             cout << "Hello, " <<"\033[1;33m"<< username <<"\033[0m"<< endl;
             sleep(1.5);
@@ -843,7 +944,7 @@ int main() {
             chooseNameAgain = false;
             player.setUsername(username);
         }
-        else if(input == "N") {
+        else if(input == "N") { //player wants a different name
             chooseNameAgain = true;
         }
 
@@ -867,19 +968,20 @@ int main() {
                 break;
             }
         }
-    if (difficulty == 1) {
+    if (difficulty == 1) { //player chooses easy difficulty
         merchant = Merchant("easy_weapons_file.txt", "food_file.txt", "easy_armor_file.txt"); //initialize merchant
-        monster = Monster("monsters.txt"); //initialize monster
-        level_1 = "testLevel.txt";
-        level_2 = "easy_level_3.txt";
-        level_3 = "easy_level_2.txt";
+        monster1 = Monster("monsters.txt"); //initialize monster
+
+        level_1 = "easy_level_1.txt"; //set levels according to difficulty
+        level_2 = "easy_level_2.txt";
+        level_3 = "easy_level_3.txt";
         max_turns = 10; //max number of candycrush level turns
         target_points = 40; //minimum score for candycrush levels
         //printStory("easy_story.txt");
     }
-    else if (difficulty == 2) {
+    else if (difficulty == 2) { //player chooses moderate difficulty
         merchant = Merchant("moderate_weapons_file.txt", "food_file.txt", "moderate_armor_file.txt");
-        monster = Monster("monsters.txt");
+        monster2 = Monster("monsters.txt");
         level_1 = "moderate_level_1.txt";
         level_2 = "moderate_level_2.txt";
         level_3 = "moderate_level_3.txt";
@@ -887,9 +989,9 @@ int main() {
         target_points = 50;
         //printStory("moderate_story.txt");
     }
-    else if (difficulty == 3) {
+    else if (difficulty == 3) { //player chooses hard difficulty
         merchant = Merchant("hard_weapons_file.txt", "food_file.txt", "hard_armor_file.txt");
-        monster = Monster("monsters.txt");
+        monster3 = Monster("monsters.txt");
         level_1 = "hard_level_1.txt";
         level_2 = "hard_level_2.txt";
         level_3 = "hard_level_3.txt";
@@ -904,17 +1006,17 @@ int main() {
     levelMap.addRoom(2,4,8);
     levelMap.addRoom(3,9,6);
 
-    trade(merchant, player); //First instance of trading options
+    trade(merchant, player); //player can trade with merchant for the first time
     system("clear");
 
     do {
         cout << "\033[2J\033[1;1H"; //clears screen much faster than system("clear")
-        printStats(player);
-        levelMap.displayMap();
+        printStats(player); //print stats of player
+        levelMap.displayMap(); //display level map where player can enter candyCrush levels
 
-        cout << "\n[w/a/s/d]: \n";
+        cout << "\n[w/a/s/d]: \n"; //player chooses which directin to move
         cin >> direction;
-        levelMap.move(direction);
+        levelMap.move(direction); 
 
 /*=====testing=====
 
@@ -941,15 +1043,67 @@ int main() {
 
 ================*/
 
-        if(enterLevel(levelMap, player)) {
+        if(enterLevel(levelMap, player)) { //check if player is stepping on a level
 
             cout << "\033[2J\033[1;1H"; //clear screen very quickly
-            printStats(player);
+            printStats(player); //display stats and map so it looks like player is actually stepping on level
             levelMap.displayMap();
 
-            int room_level = roomLevel(levelMap, player);
-            switch (room_level) {
-                case 1:
+            int room_level = roomLevel(levelMap, player); //get level of room player is stepping on
+            switch (room_level) { //determine whether player can enter the room or not
+                case 1: //room one
+                    cout << "Do you want to enter this level?\n[Y/N]: ";
+                    cin >> input;
+                    while(input != "Y" && input != "N") {
+                        cout << "Enter a valid input: \n";
+                        cout << "[Y/N] ";
+                        cin >> input;
+                    }
+                    if(input == "Y") { //player enter first candyCrush level
+                        candy_return = playCandyCrush(player, level_1, max_turns, target_points); //play level one
+                        if(candy_return == -2) { //player fails level and game ends
+                            endGame = true;
+                            continue;
+                        }
+                        else if(candy_return == -1) { //player reaches target score and continues level until they run out of turns
+                            fight_return = fight(player, monster1); //player fights monster
+                        }
+                        else if(candy_return == 1) { //player reaches target score and does not continue level
+                            fight_return = fight(player, monster1);
+                        }
+                        else if(candy_return == -3) { //skip level for testing
+                            fight_return = fight(player, monster1);
+                        }
+                        else { //debugging
+                            cout << "candy_return returns wrong value: " << candy_return << endl;
+                            sleep(10);
+                        }
+                        sleep(2);
+                        if(fight_return == -2) { //player runs away
+                            trade(merchant, player); //player trades with merchant
+                        }
+                        else if(fight_return == -1) { //player dies from monster
+                            endGame = true;
+                            continue; //game ends
+                        }
+                        else if(fight_return >= 1) { //player kills monster
+                            fight_score = 100 - (fight_return * 10); //calculate score from fighting monster
+                            player.addTotalScore(fight_score);
+                            trade(merchant, player); //trade with merchant after battle
+                        }
+                        else { //debugging
+                            cout << "fight returns wrong value: " << fight_return << endl;
+                            sleep(10);
+                        }
+                    }
+                    else if(input == "N") {
+                        continue;
+                    }
+                    candy_return = 0; //reset values for next run through
+                    fight_return = 0;
+                    fight_score = 0;
+                    break;
+                case 2: //room two
                     cout << "Do you want to enter this level?\n[Y/N]: ";
                     cin >> input;
                     while(input != "Y" && input != "N") {
@@ -958,8 +1112,24 @@ int main() {
                         cin >> input;
                     }
                     if(input == "Y") {
-                        playCandyCrush(player, level_1, max_turns, target_points); //play level one
-                        fight_return = fight(player, monster);
+                        candy_return = playCandyCrush(player, level_2, max_turns, target_points); //play level two
+                        if(candy_return == -2) { //player fails level
+                            endGame = true;
+                            continue;
+                        }
+                        else if(candy_return == -1) { //player reaches target score and continues level until they run out of turns
+                            fight_return = fight(player, monster2);
+                        }
+                        else if(candy_return == 1) { //player reaches target score and does not continue level
+                            fight_return = fight(player, monster2);
+                        }
+                        else if(candy_return == -3) { //skip level for testing
+                            fight_return = fight(player, monster2);
+                        }
+                        else { //debugging
+                            cout << "candy_return returns wrong value: " << candy_return << endl;
+                            sleep(10);
+                        }
                         sleep(2);
                         if(fight_return == -2) { //player runs away
                             trade(merchant, player);
@@ -968,7 +1138,9 @@ int main() {
                             endGame = true;
                             continue;
                         }
-                        else if(fight_return == 1) { //player kills monster
+                        else if(fight_return >= 1) { //player kills monster
+                            fight_score = 100 - (fight_return * 10); //calculate score from fighting monster
+                            player.addTotalScore(fight_score);
                             trade(merchant, player);
                         }
                         else { //debugging
@@ -979,9 +1151,11 @@ int main() {
                     else if(input == "N") {
                         continue;
                     }
+                    candy_return = 0;
                     fight_return = 0;
+                    fight_score = 0;
                     break;
-                case 2:
+                case 3: //room three
                     cout << "Do you want to enter this level?\n[Y/N]: ";
                     cin >> input;
                     while(input != "Y" && input != "N") {
@@ -990,40 +1164,24 @@ int main() {
                         cin >> input;
                     }
                     if(input == "Y") {
-                        playCandyCrush(player, level_2, max_turns, target_points); //play level two
-                        fight_return = fight(player, monster);
-                        sleep(2);
-                        if(fight_return == -2) { //player runs away
-                            trade(merchant, player);
-                        }
-                        else if(fight_return == -1) { //player dies from monster
+                        candy_return = playCandyCrush(player, level_3, max_turns, target_points); //play level three
+                        if(candy_return == -2) { //player fails level
                             endGame = true;
                             continue;
                         }
-                        else if(fight_return == 1) { //player kills monster
-                            trade(merchant, player);
+                        else if(candy_return == -1) { //player reaches target score and continues level until they run out of turns
+                            fight_return = fight(player, monster3);
+                        }
+                        else if(candy_return == 1) { //player reaches target score and does not continue level
+                            fight_return = fight(player, monster3);
+                        }
+                        else if(candy_return == -3) { //skip level for testing
+                            fight_return = fight(player, monster3);
                         }
                         else { //debugging
-                            cout << "fight returns wrong value: " << fight_return << endl;
+                            cout << "candy_return returns wrong value: " << candy_return << endl;
                             sleep(10);
                         }
-                    }
-                    else if(input == "N") {
-                        continue;
-                    }
-                    fight_return = 0;
-                    break;
-                case 3:
-                    cout << "Do you want to enter this level?\n[Y/N]: ";
-                    cin >> input;
-                    while(input != "Y" && input != "N") {
-                        cout << "Enter a valid input: \n";
-                        cout << "[Y/N] ";
-                        cin >> input;
-                    }
-                    if(input == "Y") {
-                        playCandyCrush(player, level_3, max_turns, target_points); //play level three
-                        fight_return = fight(player, monster);
                         sleep(3);
                         endGame = true;
                         if(fight_return == -2) { //player runs away
@@ -1032,7 +1190,9 @@ int main() {
                         else if(fight_return == -1) { //player dies from monster
                             endGame = true;
                         }
-                        else if(fight_return == 1) { //player kills monster
+                        else if(fight_return >= 1) { //player kills monster
+                            fight_score = 100 - (fight_return * 10); //calculate score from fighting monster
+                            player.addTotalScore(fight_score);
                             cout << "You beat the game!\n";
                             sleep(3);
                             endGame = true;
@@ -1045,9 +1205,11 @@ int main() {
                     else if(input == "N") {
                         continue;
                     }
+                    candy_return = 0;
                     fight_return = 0;
+                    fight_score = 0;
                     break;
-                default:
+                default: //player cannot enter room
                     cout << "This level is locked.\n";
                     sleep(1.5);
                     break;
@@ -1056,31 +1218,14 @@ int main() {
 
     } while(endGame == false);
 
+    //game ends
     system("clear");
-    printAsciiArt("the_end.txt");
-    writeToLeaderboard("leaderboard.txt", player);
-    printLeaderBoard("leaderboard.txt");
+    printAsciiArt("the_end.txt"); //The End art
+    writeToLeaderboard("leaderboard.txt", player); //write player's name and score to leaderboard
+    printLeaderBoard("leaderboard.txt"); //print out sorted leaderboard
 
-/*I am obsessed with bars now
-    cout << "[\033[1;33m";
-    for(int i = 0; i < 60; i++) { //60 second bar until game shuts down
-        cout << "#";
-        sleep(1);
-    }
-    cout << "\033[0m";
-*/
-
-        //implement gifts and stars
-        //balance trading
-        //add option to buy multiple food items at a time
-        //add player's inventories to shop
-        //add command options under stats (?)
-        //add misfortunes
-        //protect against wrong inputs
-        //finalize design of game
-        //***change to reflect difficulty*** - gives more money to player - addTotalMoney() after candycrush level
-        //***game ending scenarios***
-        //design levels and create files
-        //final boss (?)
+    //balance trading
+    //design levels and create files
+    //printStory()
 
 }
