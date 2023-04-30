@@ -9,20 +9,15 @@ Player::Player() {
     Armor default_armor;
     curr_weapon = default_weapon;
     curr_armor = default_armor;
-
     username = "";
-
     level_score = 0;
     total_score = 0;
-
     level_money = 0;
     total_money = 500;
-    
     total_level = 0; //Player Level
-
     health = 100;
-
     levels_cleared = 0;
+
 }
 //This Sets users name
 void Player::setUsername(string set_username)
@@ -105,63 +100,65 @@ int Player::getLevel()
     return total_level;
 }
 
+//gets number of levels a player has cleared
 int Player::getLevelsCleared() {
     return levels_cleared;
 }
+//increases the levels cleared by player
 void Player::increaseLevelsCleared() {
     levels_cleared++;
 }
 
 //getters
-Weapon Player::getCurrWeapon() {
+Weapon Player::getCurrWeapon() { //get player's current weapon
     return curr_weapon;
 }
-Armor Player::getCurrArmor() {
+Armor Player::getCurrArmor() { //get player's current armor
     return curr_armor;
 }
-vector<Food> Player::getFoodInv() {
+vector<Food> Player::getFoodInv() { //get player's food inventory
     return food_inv;
 }
-Food Player::getFood(int index) {
+Food Player::getFood(int index) { //get food from food inventory
     return food_inv.at(index);
 }
-void Player::addFood(Food food) {
+void Player::addFood(Food food) { //add food to food inventory
     food_inv.push_back(food);
 }
-void Player::printFoodInv(vector<Food> vect) {
-    if(!vect.empty()) {
-        for(int i = 0; i < vect.size(); i++) {
+void Player::printFoodInv(vector<Food> vect) { //print the player's food inventory
+    if(!vect.empty()) { //check if inventory is empty
+        for(int i = 0; i < vect.size(); i++) { //loop through food inventory and print out the food item
             cout << vect.at(i).getName() << ": " << vect.at(i).getRecover() << "HP | ";
         }
     }
-    else
+    else //food inventory is empty
         cout << "You have no food";
 }
 
 //setters
-void Player::setCurrWeapon(Weapon weapon) {
+void Player::setCurrWeapon(Weapon weapon) { //set player's current weapon
     curr_weapon = weapon;
 }
-void Player::setCurrArmor(Armor armor) {
+void Player::setCurrArmor(Armor armor) { //set player's current armor
     curr_armor = armor;
 }
 
 
 
-int Player::getHealth() {
+int Player::getHealth() { //get player's health
     return health;
 }
-void Player::setHealth(int new_health) {
+void Player::setHealth(int new_health) { //set player's health
     health = new_health;
 }
-void Player::removeHealth(int remove_health) {
+void Player::removeHealth(int remove_health) { //remove health from player
     health -= remove_health;
 }
 
-void Player::removeAllFood() {
+void Player::removeAllFood() { //remove all food from player's inventory
     food_inv.clear();
 }
 
-void Player::removeFood(int index) {
+void Player::removeFood(int index) { //remove food from player's inventory
     food_inv.erase(food_inv.begin() + index - 1);
 }
