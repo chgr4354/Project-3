@@ -25,3 +25,4 @@ the player successfully kills the monster they will have the opportunity to buy 
 the merchant. Then they will move on to the second and third levels along with the second and third monsters.
 Upon killing the third monster, the player will have beaten the game and have their score added to the leaderboard.
 The UI has been developed very carefully and should make for a very enjoyable experience.
+**Only .txt files for easy mode have been implemented - further explained in gameDriver.cpp**
